@@ -1,0 +1,15 @@
+[
+    {
+        "relation": [
+            "delegate_permission/common.handle_all_urls"
+        ],
+        "target": {
+            "namespace": "android_app",
+            "package_name": "in.subastro.app",
+            "sha256_cert_fingerprints": [
+                "71:05:66:74:3B:FB:E5:D1:01:0F:14:43:35:36:32:95:FC:9D:1D:9C:E0:0B:6F:3B:55:2D:91:E5:95:3A:26:A0",
+                "56:D9:C5:3E:FF:22:7B:00:72:82:BD:2E:02:E3:85:AB:8B:C2:6A:59:3A:AF:39:2E:8D:89:14:3D:05:C1:16:84"
+            ]
+        }
+    }
+]

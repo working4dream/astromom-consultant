@@ -1,0 +1,142 @@
+.dropzone-custom-ui {
+    border: 2px dashed #808080;
+    border-radius: 10px;
+    background: #ffffff;
+    cursor: pointer;
+    position: relative;
+    text-align: center;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.dropzone-custom-ui:hover {
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.dz-icon {
+    font-size: 50px;
+    color: #808080;
+    margin-bottom: 10px;
+}
+
+.dz-message {
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.dz-progress-container {
+    background-color: #ffe5e5;
+    border-radius: 8px;
+    padding: 10px;
+    text-align: left;
+}
+
+.dz-file-details {
+    font-size: 14px;
+    color: #808080;
+    margin-bottom: 5px;
+}
+
+.progress {
+    height: 6px;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.progress-bar {
+    background: #808080;
+    transition: width 0.4s ease;
+}
+
+.dz-file-preview {
+    display: none;
+}
+
+.responsive-img {
+    width: auto;
+    height: auto;
+    max-height: 280px;
+    object-fit: cover;
+}
+
+@media (max-width: 768px) {
+    .responsive-img {
+        height: 100%;
+        width: 60%;
+        padding: 0px 15px;
+    }
+}
+
+.media-container {
+    position: relative;
+    width: 150px;
+    height: 150px;
+    overflow: hidden;
+    border-radius: 5px;
+    display: flex;
+    justify-self: center;
+}
+
+@media (min-width: 1440px) {
+    .media-container {
+        width: 180px;
+        height: 180px;
+    }
+}
+
+@media (min-width: 1700px) {
+    .media-container {
+        width: 220px;
+        height: 220px;
+    }
+}
+
+.media-container img,
+.media-container video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 5px;
+}
+
+.delete-media {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 10;
+    padding: 2px 6px;
+    font-size: 12px;
+    opacity: 0;
+    /* Hidden by default */
+    transition: opacity 0.3s ease-in-out;
+}
+
+.media-container:hover .delete-media {
+    opacity: 1;
+    /* Show on hover */
+}
+.select-button {
+    top: 40%;
+    left: 30%;
+    opacity: 0;
+    z-index: 1;
+}
+
+.media-container:hover .select-button {
+    opacity: 1;
+}
+.mediaLibrary .modal-dialog {
+    max-width: calc(100vw - 100px) !important;
+    max-height: calc(100vh - 30px) !important;
+}
+
+.mediaLibrary .modal-content {
+    height: 100%;
+    overflow: auto;
+}
+
+.media-filename {
+    margin-top: 5px;
+    font-size: 14px;
+    word-break: break-all;
+}

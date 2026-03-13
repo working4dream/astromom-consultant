@@ -1,0 +1,21 @@
+{
+    "applinks": {
+      "apps": [],
+      "details": [
+        {
+          "appIDs": [
+            "TCAH9CHB39.in.astromom.app"
+          ],
+          "paths": [
+            "/login",
+            "/expertInfoScreen"
+          ]
+        }
+      ]
+    },
+    "webcredentials": {
+      "apps": [
+        "TCAH9CHB39.in.astromom.app"
+      ]
+    }
+  }

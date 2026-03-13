@@ -1,0 +1,117 @@
+networks:
+  laravel:
+    driver: bridge
+
+services:
+  nginx:
+    container_name: web_server
+    image: nginx:1.24.0
+    restart: unless-stopped
+    ports:
+      - 80:80
+      - 443:443
+    labels:
+      - "traefik.http.routers.api.rule=Host(`${APP_URL}`)"
+    volumes:
+      - ./:/var/www/html
+      - ./docker-compose/nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./docker-compose/php/error_reporting.ini:/usr/local/etc/php/conf.d/error_reporting.ini
+      - ./docker-compose/certbot/www:/etc/ssl/
+    networks:
+      - laravel
+    depends_on:
+      - php
+      - traefik
+  php:
+    build:
+      args:
+        user: laravel
+        uid: 1000
+      context: ./
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    working_dir: /var/www/html
+    container_name: php
+    ports:
+      - 9001:9000
+      - 3001:3000
+    environment:
+      MYSQL_HOST: ${DB_HOST}
+      MYSQL_USER: ${DB_USERNAME}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_DB: ${DB_DATABASE}
+    volumes:
+      - ./:/var/www/html
+      - ./docker-compose/php/php.ini:/usr/local/etc/php/conf.d/custom_php.ini
+      - ./docker-compose/php/xdebug.ini:/usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
+    networks:
+      - laravel
+    extra_hosts:
+      - host.docker.internal:host-gateway
+  mysql:
+    image: mysql:8.0.31
+    restart: unless-stopped
+    container_name: ${DB_HOST}
+    ports:
+      - ${DB_PORT}:3306
+    environment:
+      MYSQL_DATABASE: ${DB_DATABASE}
+      MYSQL_ROOT_PASSWORD: secret
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_USER: ${DB_USERNAME}
+    volumes:
+      - db_data:/var/lib/mysql
+      - ./docker-compose/mysql/custom.conf:/etc/mysql/conf.d/my.conf
+    networks:
+      - laravel
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:latest
+    container_name: pma
+    links:
+      - mysql
+    environment:
+      UPLOAD_LIMIT: 1G
+      PMA_HOST: mysql
+      PMA_PORT: 3306
+      PMA_ARBITRARY: 1
+      MYSQL_USERNAME: ${DB_USERNAME}
+      MYSQL_ROOT_PASSWORD: secret
+    restart: always
+    depends_on:
+      - mysql
+      - php
+      - traefik
+    labels:
+      - "traefik.http.routers.api.rule=Host(`${APP_URL}`)"
+    ports:
+      - "8081:80"
+    networks:
+      - laravel
+  traefik:
+    image: traefik:v2.9
+    command: --api.insecure=true --providers.docker
+    ports:
+      - "8080:8080"
+    networks:
+      - laravel
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+  mailhog:
+    image: mailhog/mailhog
+    container_name: mailhog
+    ports:
+      - ${MAIL_PORT}:1025
+      - 8025:8025
+    networks:
+      - laravel
+  redis:
+    image: redis:6.2-alpine
+    container_name: redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    networks:
+      - laravel
+volumes:
+  db_data:
+
