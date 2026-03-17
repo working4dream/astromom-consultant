@@ -41,7 +41,7 @@ Route::get('/view-logs', function () {
        return 'Log file not found!';
    }
 });
-Route::get('/', [HomeController::class, 'index']);
+Route::get('/', fn() => redirect()->route('admin.login'));
 Route::get('/astrologer/signup', [AstrologerController::class, 'signup'])->name('astrologer.signup');
 Route::get('/astrologer/success', [AstrologerController::class, 'success'])->name('astrologer.success');
 Route::post('/astrologer/store', [AstrologerController::class, 'astrologer_store'])->name('astrologer.store');

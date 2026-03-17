@@ -47,7 +47,11 @@ class AuthController extends BaseController
         $isProduction = env('APP_ENV') === 'production';
         $isStaging = env('APP_ENV') === 'staging';
         $settings = Setting::where('name', 'is_ios_review')->first();
-        $isReview = $settings->data === 'true';
+        if($settings){
+            $isReview = $settings->data === 'true';
+        }else{
+            $isReview = false;
+        }
         $shouldSendOtp = $isProduction || ($isStaging && $isReview);
         $randomNumber = $shouldSendOtp ? rand(1000, 9999) : 1234;
         if ($shouldSendOtp) {
