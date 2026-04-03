@@ -44,18 +44,15 @@ class AstrologerExport implements FromCollection,WithMapping,WithHeadings
         }
         if (request()->filled('rating_comparator') && request()->filled('rating')) {
             $rating = (float) request()->rating;
-        
-            $astrologers->leftJoin('astrologer_ratings', 'users.id', '=', 'astrologer_ratings.astrologer_id')
-                        ->select('users.*')
-                        ->selectRaw('AVG(astrologer_ratings.ratings) as avg_rating')
-                        ->groupBy('users.id');
-            
+
+            $astrologers->withAggregate('ratings as avg_rating', 'ratings', 'avg');
+
             switch (request()->rating_comparator) {
                 case 'above':
                     $astrologers->having('avg_rating', '>', $rating);
                     break;
                 case 'equal':
-                    $astrologers->having('avg_rating', '=', $rating);
+                    $astrologers->havingRaw('ROUND(avg_rating, 4) = ?', [round($rating, 4)]);
                     break;
                 case 'below':
                     $astrologers->having('avg_rating', '<', $rating);

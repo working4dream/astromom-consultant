@@ -39,20 +39,43 @@ class AstrologerController extends Controller
 
     public function index(Request $request)
     {
+        $start_date = now()->startOfMonth()->startOfDay();
+        $end_date = now()->endOfDay();
+
+        if ($request->has('date_range') && ! empty($request->date_range)) {
+            $dates = explode(' - ', $request->date_range);
+            if (count($dates) === 2) {
+                $start_date = \Carbon\Carbon::createFromFormat('d M, Y', trim($dates[0]))->startOfDay();
+                $end_date = \Carbon\Carbon::createFromFormat('d M, Y', trim($dates[1]))->endOfDay();
+            } elseif (count($dates) === 1) {
+                $single_date = \Carbon\Carbon::createFromFormat('d M, Y', trim($dates[0]));
+                $start_date = $single_date->copy()->startOfDay();
+                $end_date = $single_date->copy()->endOfDay();
+            }
+        }
+
+        $dateFiltered = $request->has('date_range') && ! empty($request->date_range);
+
         $astrologers = User::query()
             ->role('astrologer')
-            ->leftJoin('appointments', 'users.id', '=', 'appointments.astrologer_id')
-            ->select('users.*')
-            ->selectRaw('COUNT(appointments.id) as appointments_count')
-            ->groupBy('users.id')
-            ->orderByDesc('appointments_count');
-        if ($request->filled('top_experts')) {
-            $astrologers->leftJoin('appointments', 'users.id', '=', 'appointments.astrologer_id')
-                ->selectRaw('COUNT(appointments.id) as appointments_count')
-                ->groupBy('users.id')
-                ->orderByDesc('appointments_count') 
-                ->limit(25);
+            ->withCount([
+                'appointments' => function ($query) use ($start_date, $end_date, $dateFiltered) {
+                    if ($dateFiltered) {
+                        $query->whereBetween('created_at', [$start_date, $end_date]);
+                    }
+                },
+            ]);
+
+        if ($dateFiltered) {
+            $astrologers->whereHas('appointments', function ($query) use ($start_date, $end_date) {
+                $query->whereBetween('created_at', [$start_date, $end_date]);
+            });
         }
+
+        if ($request->filled('top_experts')) {
+            $astrologers->orderByDesc('appointments_count')->limit(25);
+        }
+
         if ($request->filled('full_name')) {
             $fullName = trim($request->full_name);
         
@@ -87,19 +110,16 @@ class AstrologerController extends Controller
             }
         }
         if ($request->filled('rating_comparator') && $request->filled('rating')) {
-            $rating = (float)$request->rating;
+            $rating = (float) $request->rating;
 
-            $astrologers->leftJoin('astrologer_ratings', 'users.id', '=', 'astrologer_ratings.astrologer_id')
-                ->select('users.*')
-                ->selectRaw('AVG(astrologer_ratings.ratings) as avg_rating')
-                ->groupBy('users.id');
+            $astrologers->withAggregate('ratings as avg_rating', 'ratings', 'avg');
 
             switch ($request->rating_comparator) {
                 case 'above':
                     $astrologers->having('avg_rating', '>', $rating);
                     break;
                 case 'equal':
-                    $astrologers->having('avg_rating', '=', $rating);
+                    $astrologers->havingRaw('ROUND(avg_rating, 4) = ?', [round($rating, 4)]);
                     break;
                 case 'below':
                     $astrologers->having('avg_rating', '<', $rating);
@@ -126,21 +146,6 @@ class AstrologerController extends Controller
                     $q->orWhere('professional_title', 'LIKE', "%{$professional_title}%");
                 }
            });
-        }
-        $start_date = now()->startOfMonth()->startOfDay();
-        $end_date = now()->endOfDay();
-
-        if ($request->has('date_range') && !empty($request->date_range)) {
-            $dates = explode(' - ', $request->date_range);
-            if (count($dates) === 2) {
-                $start_date = \Carbon\Carbon::createFromFormat('d M, Y', trim($dates[0]))->startOfDay();
-                $end_date = \Carbon\Carbon::createFromFormat('d M, Y', trim($dates[1]))->endOfDay();
-            } elseif (count($dates) === 1) {
-                $single_date = \Carbon\Carbon::createFromFormat('d M, Y', trim($dates[0]));
-                $start_date = $single_date->copy()->startOfDay();
-                $end_date = $single_date->copy()->endOfDay();
-            }
-            $astrologers->whereBetween('appointments.created_at', [$start_date, $end_date]);
         }
         $astrologers = $request->filled('top_experts') ? 
             $astrologers->paginate(request('items') ?? 25)->withQueryString() :
@@ -230,6 +235,8 @@ class AstrologerController extends Controller
             'experience' => $request->experience,
             'city_id' => $request->city_id,
             'slug' => $slug,
+            'is_approved' => 1,
+            'approved_id' => auth()->id(),
         ]);
         $astrologer->assignRole('astrologer');
         if ($astrologer) {
@@ -282,6 +289,8 @@ class AstrologerController extends Controller
             'experience' => $request->experience,
             'city_id' => $request->city_id,
             'status' => isset($request->status)?1:0,
+            'is_approved' => 1,
+            'approved_id' => auth()->id(),
         ]);
 
         return redirect()->route('admin.experts.index',['tab'=>'approved'])->with("success", 'Astrologer updated successfully');

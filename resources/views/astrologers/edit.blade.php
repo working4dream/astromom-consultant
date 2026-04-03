@@ -345,28 +345,39 @@
     <script src="{{ URL::asset('js/custom-dropzone.js') }}"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            var element = document.getElementById('expertise');
-            new Choices(element, {
+            var choicesConfig = {
                 removeItemButton: true,
                 maxItemCount: 3,
+                maxItemText: function(maxItemCount) {
+                    return 'Only ' + maxItemCount + ' values can be added';
+                },
+            };
+
+            var allChoices = [
+                new Choices(document.getElementById('expertise'), choicesConfig),
+                new Choices(document.getElementById('language'), choicesConfig),
+                new Choices(document.getElementById('professional_title'), choicesConfig),
+                new Choices(document.getElementById('keywords'), choicesConfig),
+            ];
+
+            var userInteracted = false;
+            document.addEventListener('click', function() { userInteracted = true; }, { once: true });
+
+            allChoices.forEach(function(instance) {
+                instance.hideDropdown();
+
+                instance.passedElement.element.addEventListener('showDropdown', function() {
+                    if (!userInteracted) {
+                        instance.hideDropdown();
+                    }
+                });
             });
 
-            var element = document.getElementById('language');
-            new Choices(element, {
-                removeItemButton: true,
-                maxItemCount: 3,
-            });
-            var element = document.getElementById('professional_title');
-            new Choices(element, {
-                removeItemButton: true,
-                maxItemCount: 3,
-            });
-            var element = document.getElementById('keywords');
-            new Choices(element, {
-                removeItemButton: true,
-                maxItemCount: 3,
-            });
-
+            setTimeout(function() {
+                allChoices.forEach(function(instance) {
+                    instance.hideDropdown();
+                });
+            }, 50);
         });
     </script>
     <script>

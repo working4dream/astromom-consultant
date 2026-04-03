@@ -11,7 +11,14 @@ class RazorpayController extends BaseController
 {
     public function createOrder(Request $request)
     {
-        $api = new Api(config('services.razorpay.key'), config('services.razorpay.secret'));
+        $key = config('services.razorpay.key');
+        $secret = config('services.razorpay.secret');
+
+        if (empty($key) || empty($secret)) {
+            return $this->sendError('Razorpay credentials not configured.', [], 500);
+        }
+
+        $api = new Api($key, $secret);
         
         $order = $api->order->create([
             'receipt' => 'receipt_' . uniqid(),

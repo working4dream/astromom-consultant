@@ -73,6 +73,8 @@ Route::prefix('v1/customer')->group(function () {
     Route::post('register-profile', [CustomerController::class, 'registerProfile']);
 
     Route::middleware(['checkBearerToken'])->group(function () {
+        // Dashboard
+        Route::get('dashboard', [CustomerController::class, 'dashboard']);
         // Profile
         Route::post('update-profile', [CustomerController::class, 'updateProfile']);
         Route::post('profile-picture', [CustomerController::class, 'profilePicture']);
@@ -82,6 +84,7 @@ Route::prefix('v1/customer')->group(function () {
         Route::get('get-astrologers', [CustomerController::class, 'getAstrologers']);
         Route::get('get-online-astrologers', [CustomerController::class, 'getOnlineAstrologers']);
         Route::get('get-astrologer-detail/{id}', [CustomerController::class, 'getAstrologerDetail']);
+        Route::get('get-expert', [CustomerController::class, 'getExpert']);
         // Astrologer Review
         Route::post('astrologer-review', [AppointmentController::class, 'astrologerReview']);
         Route::get('get-astrologer-reviews', [AppointmentController::class, 'getAstrologerReviews']);
