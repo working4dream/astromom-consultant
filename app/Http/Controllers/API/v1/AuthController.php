@@ -33,16 +33,19 @@ class AuthController extends BaseController
             return $this->sendError($validator->errors()->first());       
         }
 
-        $mobileNumber = $request->input('mobile_number');
+        $mobileNumber = preg_replace('/\D/', '', (string) $request->input('mobile_number'));
+        if ($mobileNumber === '') {
+            return $this->sendError('A valid mobile number is required.', [], 422);
+        }
         $user = User::where('mobile_number', $mobileNumber)->first();
         if (!$user) {
-            return $this->sendError('Your mobile number is not registered. Please sign up to create an account.');
+            return $this->sendError('Your mobile number is not registered. Please sign up to create an account.', [], 422);
         }
         $matchMobileCodeWithNumber = User::where('mobile_code', $request->input('mobile_code'))
             ->where('mobile_number', $mobileNumber)
             ->first();
         if (!$matchMobileCodeWithNumber) {
-            return $this->sendError('The provided mobile code and mobile number do not match our records. Please check and try again.');
+            return $this->sendError('The provided mobile code and mobile number do not match our records. Please check and try again.', [], 422);
         }
         $isProduction = env('APP_ENV') === 'production';
         $isStaging = env('APP_ENV') === 'staging';
@@ -55,7 +58,7 @@ class AuthController extends BaseController
         $shouldSendOtp = $isProduction || ($isStaging && $isReview);
         $randomNumber = $shouldSendOtp ? rand(1000, 9999) : 1234;
         if ($shouldSendOtp) {
-            if ($user->mobile_code === 91) {
+            if ((int) $user->mobile_code === 91) {
                 $message = "Your One-Time Password is {$randomNumber}. It will expire in 30 minutes. Please do not share this code with anyone. - SUBASTRO";
                 $response = $this->smsService->sendSMS($mobileNumber, $message);
             } else {
@@ -113,10 +116,10 @@ class AuthController extends BaseController
             return $this->sendError($validator->errors()->first());
         }
     
-        $mobileNumber = $request->input('mobile_number');
+        $mobileNumber = preg_replace('/\D/', '', (string) $request->input('mobile_number'));
         $user = User::where('mobile_number', $mobileNumber)->first();
         if (!$user) {
-            return $this->sendError('User not found.');
+            return $this->sendError('User not found.', [], 422);
         }
     
         if ($request->otp != $user->otp && $request->otp != '9022') {

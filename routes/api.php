@@ -17,6 +17,7 @@ use App\Http\Controllers\API\v1\HelpAndSupportController;
 
 // API Version 1
 Route::post('v1/login', [AuthController::class, 'login']);
+Route::post('login', [AuthController::class, 'login']); // POST /api/login — alias
 Route::post('v1/verifyOtp', [AuthController::class, 'verifyOtp']);
 Route::middleware('checkBearerToken')->post('v1/logout', [AuthController::class, 'logout']);
 // Astrologer

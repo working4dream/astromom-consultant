@@ -12,6 +12,6 @@ class VerifyCsrfToken extends Middleware
      * @var array<int, string>
      */
     protected $except = [
-        //
+        'login', // POST /login — mobile API (JSON), same path as GET deep-link
     ];
 }

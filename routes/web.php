@@ -190,6 +190,9 @@ Route::prefix('admin')->group(function () {
    });
 });
 Route::get('/login', [DeepLinkController::class, 'handleDeepLink']);
+// Mobile app API login: POST /login (GET above is deep-link only; without this, POST returns 405)
+Route::post('/login', [\App\Http\Controllers\API\v1\AuthController::class, 'login'])
+    ->middleware('throttle:api');
 Route::get('/share-app', [DeepLinkController::class, 'handleDeepLink']);
 Route::get('/expertInfoScreen', [AstrologerController::class, 'shareProfile']);
 
