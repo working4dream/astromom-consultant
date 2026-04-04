@@ -22,6 +22,7 @@ use App\Http\Controllers\MediaLibraryController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\FreeChatUsageController;
 use App\Http\Controllers\WithdrawRequestController;
+use App\Http\Controllers\ProductController;
 use Illuminate\Support\Facades\File;
 /*
 |--------------------------------------------------------------------------
@@ -67,6 +68,16 @@ Route::prefix('admin')->group(function () {
    Route::post('logout', [LoginController::class, 'logout'])->name('admin.logout');
    Route::group(['middleware' => ['auth']], function () {
       Route::get('/dashboard', [HomeController::class, 'dashboard'])->name('admin.dashboard');
+
+      Route::prefix('products')->group(function () {
+         Route::get('', [ProductController::class, 'index'])->name('admin.products.index');
+         Route::get('/create', [ProductController::class, 'create'])->name('admin.products.create');
+         Route::post('/store', [ProductController::class, 'store'])->name('admin.products.store');
+         Route::get('/{id}/edit', [ProductController::class, 'edit'])->name('admin.products.edit');
+         Route::post('/{id}', [ProductController::class, 'update'])->name('admin.products.update');
+         Route::post('/{id}/destroy', [ProductController::class, 'destroy'])->name('admin.products.destroy');
+      });
+      Route::post('/update-product-status', [ProductController::class, 'updateStatus'])->name('admin.update-product-status');
       Route::get('/sales-data/{range}', [HomeController::class, 'getSalesData'])->name('admin.sales-data');
       Route::get('/orders/filter', [HomeController::class, 'filterOrders'])->name('orders.filter');
       Route::get('/free-chat-usage-data', [HomeController::class, 'freeChatUsage'])->name('orders.free-chat-usage-data');

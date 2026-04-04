@@ -25,6 +25,22 @@
                     </a>
                 </li>
                 <li class="nav-item">
+                    <a class="nav-link menu-link" href="#sidebarProducts" data-bs-toggle="collapse" role="button"
+                        aria-expanded="false" aria-controls="sidebarProducts">
+                        <i class="ri-archive-2-fill"></i> <span>Products</span>
+                    </a>
+                    <div class="collapse menu-dropdown" id="sidebarProducts">
+                        <ul class="nav nav-sm flex-column">
+                            <li class="nav-item">
+                                <a class="nav-link {{ request()->routeIs('admin.products.*') ? 'active' : '' }}"
+                                    href="{{ route('admin.products.index') }}">
+                                    Services
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+                <li class="nav-item">
                     <a class="nav-link menu-link" href="#sidebarorders" data-bs-toggle="collapse" role="button"
                         aria-expanded="false" aria-controls="sidebarorders">
                         <i class="ri-shopping-cart-2-fill"></i>Orders
