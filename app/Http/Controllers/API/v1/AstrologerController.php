@@ -13,7 +13,6 @@ use App\Models\Appointment;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\ExpertReferral;
-use Illuminate\Validation\Rule;
 use App\Models\AstrologerEarning;
 use App\Models\AstrologerSchedule;
 use App\Models\AstrologerWithdrawal;
@@ -289,7 +288,7 @@ class AstrologerController extends BaseController
         $user = auth('api')->user();
 
         if (!$user) {
-            return $this->sendError('Astrologer not found', 404);
+            return $this->sendError('Astrologer not found');
         }
 
         try {
@@ -297,7 +296,7 @@ class AstrologerController extends BaseController
             return $this->sendResponse([], 'Your account has been deleted successfully.');
         } catch (\Exception $e) {
             \DB::rollBack();
-            return $this->sendError('Failed to delete account. Please try again.', 500);
+            return $this->sendError('Failed to delete account. Please try again.');
         }
     }
 

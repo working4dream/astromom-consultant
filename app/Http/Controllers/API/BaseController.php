@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\API;
 
 use App\Models\Order;
-use Illuminate\Http\Request;
 use Kreait\Firebase\Factory;
 use App\Http\Controllers\Controller;
 use Kreait\Firebase\Messaging\ApnsConfig;
@@ -39,11 +38,12 @@ class BaseController extends Controller
     }
  
     /**
-     * return error response.
+     * Return error JSON. Use 404 only when the requested resource does not exist.
+     * Default is 400 (bad request); pass explicit codes for validation (422), not found (404), etc.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function sendError($error, $errorMessages = [], $code = 404)
+    public function sendError($error, $errorMessages = [], $code = 400)
     {
     	$response = [
             'success' => false,

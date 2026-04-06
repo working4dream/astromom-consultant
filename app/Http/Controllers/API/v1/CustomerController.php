@@ -7,6 +7,7 @@ use App\Models\Appointment;
 use App\Models\AppointmentRating;
 use App\Models\AstrologerRating;
 use App\Models\ExpertReferral;
+use App\Models\Product;
 use App\Models\Setting;
 use App\Models\User;
 use App\Services\MyOperatorSMSService;
@@ -14,8 +15,8 @@ use App\Traits\AwsS3Trait;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
 use Validator;
-use App\Models\Product;
 
 class CustomerController extends BaseController
 {
@@ -561,7 +562,7 @@ class CustomerController extends BaseController
         $user = auth('api')->user();
 
         if (!$user) {
-            return $this->sendError('Customer not found', 404);
+            return $this->sendError('Customer not found');
         }
         
         try {
@@ -569,7 +570,7 @@ class CustomerController extends BaseController
             return $this->sendResponse([], 'Your account has been deleted successfully.');
         } catch (\Exception $e) {
             \DB::rollBack();
-            return $this->sendError('Failed to delete account. Please try again.', 500);
+            return $this->sendError('Failed to delete account. Please try again.');
         }
     }
 

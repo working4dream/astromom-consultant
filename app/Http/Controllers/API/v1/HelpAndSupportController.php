@@ -3,9 +3,7 @@
 namespace App\Http\Controllers\API\v1;
 
 use App\Http\Controllers\API\BaseController;
-use App\Http\Controllers\Controller;
 use App\Models\Faq;
-use Illuminate\Http\Request;
 
 class HelpAndSupportController extends BaseController
 {
