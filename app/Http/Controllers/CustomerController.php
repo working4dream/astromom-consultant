@@ -81,7 +81,8 @@ class CustomerController extends Controller
             'dob' => $request->dob,
             'gender' => $request->gender,
             'city_id' => $request->city_id,
-            'notes' => $request->notes
+            'notes' => $request->notes,
+            'zego_user_id' => rand(1000, 9999) . time(),
         ]);
     
         $role = Role::findByName('customer');

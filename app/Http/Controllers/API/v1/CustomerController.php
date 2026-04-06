@@ -15,6 +15,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Validator;
+use App\Models\Product;
 
 class CustomerController extends BaseController
 {
@@ -635,6 +636,9 @@ class CustomerController extends BaseController
     }
     public function getExpert()
     {
+        $user = auth('api')->user(); 
+        $showProducts = $user && $user->hasRole('customer');
+
         $astrologer = User::role('astrologer')
             ->where('status', 1)
             ->first();
@@ -677,6 +681,14 @@ class CustomerController extends BaseController
         $waitingTime = now()->diffInMinutes($endTime);
         $roundedWaitingTime = (int) round($waitingTime);
         $waitingTimeInSeconds = $roundedWaitingTime * 60;
+        $products = Product::where('status',1)->get();
+        $existing = ExpertReferral::where('astrologer_id', $astrologer->id)->first();
+        if (!$existing) {
+            $existing = ExpertReferral::create([
+                'astrologer_id' => $astrologer->id,
+                'referral_code' => strtoupper(Str::random(8)),
+            ]);
+        }
         $data = [
             'id' => $astrologer->id,
             'name' => $astrologer->full_name,
@@ -701,7 +713,25 @@ class CustomerController extends BaseController
             'chat_price' => $bookNowPrice->chat_price ?? $settingPrices['chat_min_price'],
             'voice_price' => $bookNowPrice->voice_price ?? $settingPrices['voice_min_price'],
             'video_price' => $bookNowPrice->video_price ?? $settingPrices['video_min_price'],
+            'share_link' => url('/expertInfoScreen?ref=' . $existing->referral_code.'&id='. $existing->astrologer_id),
         ];
-        return $this->sendResponse($data, 'Expert detail retrived successfully.');
+        if ($showProducts) {
+            $data['products'] = $products->map(function ($product){
+                return [
+                    'id' => $product->id,
+                    'title' => $product->title,
+                    'type' => $product->type,
+                    'duration' => $product->duration,
+                    'duration_in_min' => $product->duration_in_min,
+                    'description' => $product->description,
+                    'price' => $product->price,
+                    'is_gst' => $product->is_gst,
+                    'gst_type' => $product->gst_type,
+                    'gst_amount' => $product->gst_amount,
+                    'total_price' => $product->total_price ?? $product->price,
+                ];
+            });
+        }
+        return $this->sendResponse($data, 'Astologer detail retrived successfully.');
     }
 }

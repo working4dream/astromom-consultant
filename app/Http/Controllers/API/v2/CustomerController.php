@@ -10,16 +10,21 @@ use App\Models\ExpertReferral;
 use App\Models\AstrologerRating;
 use App\Models\AppointmentRating;
 use App\Http\Controllers\API\BaseController;
+use App\Models\Product;
 
 class CustomerController extends BaseController
 {
     public function getAstrologerDetail($id)
     {
+        $user = auth('api')->user(); 
+        $showProducts = $user && $user->hasRole('customer');
+
         $astrologer = User::role('astrologer')
             ->where(function ($query) use ($id) {
                 $query->where('id', $id)
                     ->orWhere('zego_user_id', $id);
             })
+            ->where('status', 1)
             ->first();
         if($astrologer === NULL){
             return $this->sendResponse([], 'Astologer detail not found');
@@ -60,6 +65,7 @@ class CustomerController extends BaseController
         $waitingTime = now()->diffInMinutes($endTime);
         $roundedWaitingTime = (int) round($waitingTime);
         $waitingTimeInSeconds = $roundedWaitingTime * 60;
+        $products = Product::where('status',1)->get();
         $existing = ExpertReferral::where('astrologer_id', $astrologer->id)->first();
         if (!$existing) {
             $existing = ExpertReferral::create([
@@ -93,6 +99,23 @@ class CustomerController extends BaseController
             'video_price' => $bookNowPrice->video_price ?? $settingPrices['video_min_price'],
             'share_link' => url('/expertInfoScreen?ref=' . $existing->referral_code.'&id='. $existing->astrologer_id),
         ];
+        if ($showProducts) {
+            $data['products'] = $products->map(function ($product){
+                return [
+                    'id' => $product->id,
+                    'title' => $product->title,
+                    'type' => $product->type,
+                    'duration' => $product->duration,
+                    'duration_in_min' => $product->duration_in_min,
+                    'description' => $product->description,
+                    'price' => $product->price,
+                    'is_gst' => $product->is_gst,
+                    'gst_type' => $product->gst_type,
+                    'gst_amount' => $product->gst_amount,
+                    'total_price' => $product->total_price ?? $product->price,
+                ];
+            });
+        }
         return $this->sendResponse($data, 'Astologer detail retrived successfully.');
     }
 }

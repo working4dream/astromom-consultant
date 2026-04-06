@@ -237,6 +237,7 @@ class AstrologerController extends Controller
             'slug' => $slug,
             'is_approved' => 1,
             'approved_id' => auth()->id(),
+            'zego_user_id' => rand(1000, 9999) . time(),
         ]);
         $astrologer->assignRole('astrologer');
         if ($astrologer) {
@@ -375,6 +376,10 @@ class AstrologerController extends Controller
             // 'cut_out_image' => $request->cutout_image,
             'gender' => $request->gender,
         ]);
+        if (is_null($astrologer->zego_user_id)) {
+            $astrologer->zego_user_id = rand(1000, 9999) . time();
+            $astrologer->save();
+        }
         $astrologer->assignRole('astrologer');
         if ($astrologer) {
             $this->createAstrologerSchedule($astrologer);
