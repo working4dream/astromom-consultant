@@ -8,6 +8,7 @@
     <meta content="Premium Multipurpose Admin & Dashboard Template" name="description" />
     <meta content="Themesbrand" name="author" />
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <meta name="currency-symbol" content="{{ config('app.currency_symbol') }}">
     <meta name="dropzone-get-media-url" content="{{ route('admin.dropzone.get-media') }}">
     <meta name="dropzone-delete-media-url" content="{{ route('admin.dropzone.delete-existing-file') }}">
     <!-- App favicon -->

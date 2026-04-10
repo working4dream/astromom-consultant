@@ -20,11 +20,11 @@
                 <div class="card-body d-flex gap-3 align-items-center">
                     <div class="avatar-sm">
                         <div class="avatar-title border bg-primary-subtle border-primary border-opacity-25 rounded-2">
-                            <i class="ri-money-rupee-circle-line text-primary fs-2"></i>
+                            <i class="ri-wallet-3-line text-primary fs-2"></i>
                         </div>
                     </div>
                     <div class="flex-grow-1">
-                        <h5 class="fs-15">₹ {{ number_format($expertTotalEarnings, 2) }}</h5>
+                        <h5 class="fs-15">{{ $currencySymbol }} {{ number_format($expertTotalEarnings, 2) }}</h5>
                         <p class="mb-0 text-muted">Total Earnings</p>
                     </div>
                 </div>
@@ -282,8 +282,8 @@
                                                                 {{ ucfirst($appointment->typeable?->connect_type) }}
                                                             @endif
                                                         </td>
-                                                        <td>₹{{ number_format($appointment->total_price, 2) }}</td>
-                                                        <td>₹ {{ number_format($appointment->typeable?->earnings?->first()?->amount, 2) }}</td>
+                                                        <td>{{ $currencySymbol }} {{ number_format($appointment->total_price, 2) }}</td>
+                                                        <td>{{ $currencySymbol }} {{ number_format($appointment->typeable?->earnings?->first()?->amount, 2) }}</td>
                                                         </td>
                                                         <td>{{ \Carbon\Carbon::parse($appointment->typeable?->date)->format('d-M-Y') }}
                                                         </td>
@@ -318,7 +318,7 @@
                                                                 #{{ $order->order_id }}
                                                             </a>
                                                         </td>
-                                                        <td>₹ {{ $order->total_price }}</td>
+                                                        <td>{{ $currencySymbol }} {{ $order->total_price }}</td>
                                                         <td>{{ explode('\\', $order->typeable_type)[count(explode('\\', $order->typeable_type)) - 1] }}
                                                         </td>
                                                         <td>

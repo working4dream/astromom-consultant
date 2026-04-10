@@ -110,10 +110,10 @@
                                             </div>
                                         @endif
                                     </td>
-                                    <td><i class="fa fa-rupee"></i> {{ $order->price }}</td>
+                                    <td>{{ $currencySymbol }} {{ $order->price }}</td>
                                     <td>1</td>
                                     <td class="fw-medium text-end">
-                                        <i class="fa fa-rupee"></i> {{ $order->price }}
+                                        {{ $currencySymbol }} {{ $order->price }}
                                     </td>
                                 </tr>
                                 <tr class="border-top border-top-dashed">
@@ -123,7 +123,7 @@
                                             <tbody>
                                                 <tr>
                                                     <td>Sub Total :</td>
-                                                    <td class="text-end"><i class="fa fa-rupee"></i> {{ $order->price }}
+                                                    <td class="text-end">{{ $currencySymbol }} {{ $order->price }}
                                                     </td>
                                                 </tr>
                                                 @if ($order->discount)
@@ -131,20 +131,20 @@
                                                         <td>Discount <span
                                                                 class="text-muted">({{ $order->coupon?->code }})</span> :
                                                         </td>
-                                                        <td class="text-end">-<i class="fa fa-rupee"></i>
+                                                        <td class="text-end">-{{ $currencySymbol }}
                                                             {{ $order->discount }}</td>
                                                     </tr>
                                                 @endif
                                                 @if ($order->gst)
                                                     <tr>
                                                         <td>GST <span class="text-muted"></span> : </td>
-                                                        <td class="text-end"><i class="fa fa-rupee"></i>
+                                                        <td class="text-end">{{ $currencySymbol }}
                                                             {{ $order->gst }}</td>
                                                     </tr>
                                                 @endif
                                                 <tr class="border-top border-top-dashed">
                                                     <th scope="row">Total :</th>
-                                                    <th class="text-end"><i class="fa fa-rupee"></i>
+                                                    <th class="text-end">{{ $currencySymbol }}
                                                         {{ $order->total_price }}</th>
                                                 </tr>
                                             </tbody>

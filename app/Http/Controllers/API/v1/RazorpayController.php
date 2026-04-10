@@ -23,7 +23,7 @@ class RazorpayController extends BaseController
         $order = $api->order->create([
             'receipt' => 'receipt_' . uniqid(),
             'amount' => intval($request->amount * 100),
-            'currency' => 'INR',
+            'currency' => config('app.currency_code'),
             'payment_capture' => 1
         ]);
         $data = [

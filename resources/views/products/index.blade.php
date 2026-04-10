@@ -32,9 +32,9 @@
                     <div class="d-flex justify-content-between align-items-center">
                         <h5 class="mb-0">
                             @if ($product->is_gst == 1)
-                                ₹ {{ number_format($product->total_price, 2) }}
+                                {{ $currencySymbol }} {{ number_format($product->total_price, 2) }}
                             @else
-                                ₹ {{ number_format($product->price, 2) }}
+                                {{ $currencySymbol }} {{ number_format($product->price, 2) }}
                             @endif
                         </h5>
                         <div class="d-flex align-items-center gap-2">

@@ -50,11 +50,11 @@
                             {{ $astrologer->email }} <br>
                             {{ $astrologer->mobile_number }}
                         </td>
-                        <td>₹ {{ number_format($astrologer->total_earnings * 2 ?? 0, 2) }}</td>
-                        <td>₹ {{ number_format($astrologer->total_earnings ?? 0, 2) }}</td>
-                        <td>₹ {{ number_format($astrologer->total_withdrawals ?? 0, 2) }}</td>
+                        <td>{{ $currencySymbol }} {{ number_format($astrologer->total_earnings * 2 ?? 0, 2) }}</td>
+                        <td>{{ $currencySymbol }} {{ number_format($astrologer->total_earnings ?? 0, 2) }}</td>
+                        <td>{{ $currencySymbol }} {{ number_format($astrologer->total_withdrawals ?? 0, 2) }}</td>
                         <td>
-                            ₹ {{ number_format($dueAmount, 2) }}
+                            {{ $currencySymbol }} {{ number_format($dueAmount, 2) }}
                         </td>
                         <td>
                             <div class="dropdown d-inline-block">

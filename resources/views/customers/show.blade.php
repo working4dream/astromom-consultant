@@ -183,7 +183,7 @@
                                                                 {{ ucfirst($appointment->typeable?->connect_type) }}
                                                             @endif
                                                         </td>
-                                                        <td>₹ {{ $appointment->total_price }}
+                                                        <td>{{ $currencySymbol }} {{ $appointment->total_price }}
                                                         </td>
                                                         <td>{{ \Carbon\Carbon::parse($appointment->typeable?->date)->format('d-M-Y') }}
                                                         </td>
@@ -262,7 +262,7 @@
                                                                 #{{ $order->order_id }}
                                                             </a>
                                                         </td>
-                                                        <td>₹ {{ $order->total_price }}</td>
+                                                        <td>{{ $currencySymbol }} {{ $order->total_price }}</td>
                                                         <td>{{ explode('\\', $order->typeable_type)[count(explode('\\', $order->typeable_type)) - 1] }}
                                                         </td>
                                                         <td>

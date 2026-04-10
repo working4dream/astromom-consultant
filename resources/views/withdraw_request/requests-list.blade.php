@@ -34,7 +34,7 @@
                         {{ $withdrawRequest->astrologer->mobile_number }}
                     </td>
                     <td>
-                        ₹ {{ $withdrawRequest->amount }}
+                        {{ $currencySymbol }} {{ $withdrawRequest->amount }}
                     </td>
                     <td>
                         <div class="dropdown d-inline-block">

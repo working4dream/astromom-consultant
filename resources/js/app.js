@@ -994,7 +994,8 @@
             }
 
             function updateCartPrice() {
-                var currencySign = "$";
+                var meta = document.querySelector('meta[name="currency-symbol"]');
+                var currencySign = meta && meta.content ? meta.content : '₹';
                 var subtotal = 0;
                 Array.from(document.getElementsByClassName("cart-item-price")).forEach(function (e) {
                     subtotal += parseFloat(e.innerHTML);

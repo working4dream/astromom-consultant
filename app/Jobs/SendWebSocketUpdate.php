@@ -4,8 +4,6 @@ namespace App\Jobs;
 use Aws\ApiGatewayManagementApi\ApiGatewayManagementApiClient;
 use Aws\Exception\AwsException;
 use Aws\DynamoDb\DynamoDbClient;
-use Aws\DynamoDb\Marshaler;
-use Illuminate\Support\Facades\Log;
 
 class SendWebSocketUpdate
 {
@@ -22,14 +20,20 @@ class SendWebSocketUpdate
 
     public function handle()
     {
-        $region = 'ap-south-1';
+        $region = config('filesystems.disks.s3.region', 'ap-south-1');
         $apiUrl = 'https://blphbnlpof.execute-api.ap-south-1.amazonaws.com/production';
 
-        // 1️⃣ DynamoDB Client
-        $dynamoDb = new DynamoDbClient([
+        $awsOptions = [
             'region' => $region,
             'version' => 'latest',
-        ]);
+            'credentials' => [
+                'key' => config('filesystems.disks.s3.key'),
+                'secret' => config('filesystems.disks.s3.secret'),
+            ],
+        ];
+
+        // 1️⃣ DynamoDB Client (explicit credentials — avoids EC2 metadata on local/Windows)
+        $dynamoDb = new DynamoDbClient($awsOptions);
 
         // 2️⃣ Get All WebSocket Connections for Seller
         $result = $dynamoDb->query([
@@ -42,11 +46,9 @@ class SendWebSocketUpdate
         ]);
 
         // 3️⃣ API Gateway WebSocket Client
-        $client = new ApiGatewayManagementApiClient([
-            'region'  => $region,
-            'version' => 'latest',
-            'endpoint' => $apiUrl, // Must match WebSocket API
-        ]);
+        $client = new ApiGatewayManagementApiClient(array_merge($awsOptions, [
+            'endpoint' => $apiUrl,
+        ]));
 
         foreach ($result['Items'] as $item) {
             $connectionId = $item['connectionId']['S'];
@@ -54,7 +56,6 @@ class SendWebSocketUpdate
             try {
                 // 4️⃣ Send message to WebSocket connection
                 $client->postToConnection([
-                    'actionName' => 'sendUpdate',
                     'ConnectionId' => $connectionId,
                     'Data' => json_encode([
                         'message' => $this->message,

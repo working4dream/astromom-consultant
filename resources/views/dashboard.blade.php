@@ -55,7 +55,7 @@
                                     </div>
                                 </div>
                                 <div class="flex-grow-1">
-                                    <h5 class="fs-15">₹ {{ number_format($totalSales, 2) }}</h5>
+                                    <h5 class="fs-15">{{ $currencySymbol }} {{ number_format($totalSales, 2) }}</h5>
                                     <p class="mb-0 text-muted">Total Sales</p>
                                 </div>
                             </div>
@@ -120,7 +120,7 @@
                                     </div>
                                 </div>
                                 <div class="flex-grow-1">
-                                    <h5 class="fs-15">{{ $appointmentsBookedCount }} <span>(₹
+                                    <h5 class="fs-15">{{ $appointmentsBookedCount }} <span>({{ $currencySymbol }}
                                             {{ $appointmentsBookedAmount }})</span></h5>
                                     <p class="mb-0 text-muted">Appointments Booked</p>
                                 </div>

@@ -21,11 +21,11 @@
                     <div class="card-body d-flex gap-3 align-items-center">
                         <div class="avatar-sm">
                             <div class="avatar-title border bg-primary-subtle border-primary border-opacity-25 rounded-2">
-                                <i class="ri-money-rupee-circle-line text-primary fs-2"></i>
+                                <i class="ri-wallet-3-line text-primary fs-2"></i>
                             </div>
                         </div>
                         <div class="flex-grow-1">
-                            <h5 class="fs-15">₹ {{ number_format($totalAmount, 2) }}</h5>
+                            <h5 class="fs-15">{{ $currencySymbol }} {{ number_format($totalAmount, 2) }}</h5>
                             <p class="mb-0 text-muted">Total Amount</p>
                         </div>
                     </div>
@@ -40,7 +40,7 @@
                             </div>
                         </div>
                         <div class="flex-grow-1">
-                            <h5 class="fs-15">₹ {{ number_format($totalPaidAmount, 2) }}</h5>
+                            <h5 class="fs-15">{{ $currencySymbol }} {{ number_format($totalPaidAmount, 2) }}</h5>
                             <p class="mb-0 text-muted">Total Paid Amount</p>
                         </div>
                     </div>
@@ -55,7 +55,7 @@
                             </div>
                         </div>
                         <div class="flex-grow-1">
-                            <h5 class="fs-15">₹ {{ number_format($totalDueAmount, 2) }}</h5>
+                            <h5 class="fs-15">{{ $currencySymbol }} {{ number_format($totalDueAmount, 2) }}</h5>
                             <p class="mb-0 text-muted">Total Due Amount</p>
                         </div>
                     </div>
@@ -127,9 +127,9 @@
                                                 </div>
                                             </a>
                                         </td>
-                                        <td><i class="fa fa-rupee"></i> {{ $earningReport->total_earning ?? 0 }}</td>
-                                        <td><i class="fa fa-rupee"></i> {{ $earningReport->paid_amount ?? 0 }}</td>
-                                        <td><i class="fa fa-rupee"></i> {{ $earningReport->total_earning - $earningReport->paid_amount }}</td>
+                                        <td>{{ $currencySymbol }} {{ $earningReport->total_earning ?? 0 }}</td>
+                                        <td>{{ $currencySymbol }} {{ $earningReport->paid_amount ?? 0 }}</td>
+                                        <td>{{ $currencySymbol }} {{ $earningReport->total_earning - $earningReport->paid_amount }}</td>
                                         <td>
                                             <div class="dropdown d-inline-block">
                                                 <button class="btn btn-soft-secondary btn-sm dropdown" type="button"

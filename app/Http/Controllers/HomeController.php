@@ -196,7 +196,7 @@ class HomeController extends Controller
                 return '<a href="'.route('admin.orders.show', $row->id).'">#'.$row->order_id.'</a>';
             })
             ->addColumn('total_price', function ($row) {
-                return '₹ '.number_format($row->total_price, 2);
+                return config('app.currency_symbol').' '.number_format($row->total_price, 2);
             })
             ->addColumn('typeable_type', function ($row) {
                 return class_basename($row->typeable_type);

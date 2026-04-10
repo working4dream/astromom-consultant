@@ -86,7 +86,7 @@
                                     class="avatar-lg rounded-circle img-thumbnail material-shadow">
                             </div>
                             <h5 class="mt-3 mb-1" id="astrologerName"></h5>
-                            <h5 class="mb-1">Amount: <span class="text-primary">₹ </span><span class="text-primary" id="amount"></span></h5>
+                            <h5 class="mb-1">Amount: <span class="text-primary">{{ $currencySymbol }} </span><span class="text-primary" id="amount"></span></h5>
                         </div>
                         <div class="card-body">
                             <div class="table-responsive table-card">

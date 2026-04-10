@@ -25,12 +25,12 @@
                 <div class="card-body d-flex gap-3 align-items-center">
                     <div class="avatar-sm">
                         <div class="avatar-title border bg-primary-subtle border-primary border-opacity-25 rounded-2">
-                            <i class="ri-money-rupee-circle-fill text-primary fs-2"></i>
+                            <i class="ri-wallet-3-line text-primary fs-2"></i>
                         </div>
                     </div>
                     <div class="flex-grow-1">
                         <h5 class="fs-15">
-                            <i class="fa fa-rupee"></i>
+                            {{ $currencySymbol }}
                             {{ number_format($totalRevenue, 2) }}
                         </h5>
                         <p class="mb-0 text-muted">Total Revenue</p>
@@ -184,7 +184,7 @@
                                             </div>
                                         </a>
                                     </td>
-                                    <td><i class="fa fa-rupee"></i> {{ $order->total_price }}</td>
+                                    <td>{{ $currencySymbol }} {{ $order->total_price }}</td>
                                     <td>
                                         Appointment
                                     </td>

@@ -73,7 +73,7 @@ class WithdrawRequestController extends Controller
                 'amount' => $request->amount,
             ]);
             $deviceTokens = json_decode($newWithdrawRequest->astrologer->device_token);
-            $notificationService->sendNotification('Your payout has been successfully processed!', 'A payout of ₹' . $newWithdrawRequest->amount . ' has been transferred to your account. It should reflect within 24 hours.', $deviceTokens);
+            $notificationService->sendNotification('Your payout has been successfully processed!', 'A payout of ' . config('app.currency_symbol') . ' ' . $newWithdrawRequest->amount . ' has been transferred to your account. It should reflect within 24 hours.', $deviceTokens);
             return response()->json(['message' => 'Status updated successfully!']);
         } else {
             $withdrawRequest = AstrologerWithdrawal::find($request->id);
@@ -94,7 +94,7 @@ class WithdrawRequestController extends Controller
                 'amount' => $withdrawRequest->amount,
             ]);
             $deviceTokens = json_decode($withdrawRequest->astrologer->device_token);
-            $notificationService->sendNotification('Your payout has been successfully processed!', 'A payout of ₹' . $withdrawRequest->amount . ' has been transferred to your account. It should reflect within 24 hours.', $deviceTokens);
+            $notificationService->sendNotification('Your payout has been successfully processed!', 'A payout of ' . config('app.currency_symbol') . ' ' . $withdrawRequest->amount . ' has been transferred to your account. It should reflect within 24 hours.', $deviceTokens);
             return response()->json(['message' => 'Status updated successfully!']);
         }
     }

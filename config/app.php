@@ -58,6 +58,19 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Display currency (symbol shown in admin UI, notifications, etc.)
+    |--------------------------------------------------------------------------
+    |
+    | Set CURRENCY_SYMBOL in .env (e.g. ₹, $, €). Defaults to ₹ if unset or empty.
+    | CURRENCY_CODE is used for payment APIs (e.g. Razorpay); must match the gateway.
+    |
+    */
+
+    'currency_symbol' => env('CURRENCY_SYMBOL') ?: '₹',
+    'currency_code' => env('CURRENCY_CODE') ?: 'INR',
+
+    /*
+    |--------------------------------------------------------------------------
     | Application Timezone
     |--------------------------------------------------------------------------
     |

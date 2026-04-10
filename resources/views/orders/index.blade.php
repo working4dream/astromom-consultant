@@ -126,7 +126,7 @@
                                                 </div>
                                             </a>
                                         </td>
-                                        <td><i class="fa fa-rupee"></i> {{ $order->total_price }}</td>
+                                        <td>{{ $currencySymbol }} {{ $order->total_price }}</td>
                                         <td>
                                             {{ class_basename($order->typeable_type) }}{{ $order->typeable?->connect_type ? ' - ' . $order->typeable->connect_type : '' }}
                                             <br>

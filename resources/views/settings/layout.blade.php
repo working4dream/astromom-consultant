@@ -44,7 +44,7 @@
                         <a class="nav-link" id="custom-v-pills-prices-tab" data-bs-toggle="pill"
                             href="#custom-v-pills-prices" role="tab" aria-controls="custom-v-pills-prices"
                             aria-selected="false">
-                            <i class="fa fa-rupee d-block fs-20 mb-1"></i> Prices
+                            <i class="ri-wallet-3-line d-block fs-20 mb-1"></i> Prices
                         </a>
                         <a class="nav-link" id="custom-v-pills-messages-tab" data-bs-toggle="pill"
                             href="#custom-v-pills-messages" role="tab" aria-controls="custom-v-pills-messages"
