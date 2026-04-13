@@ -62,7 +62,7 @@ class AstrologerController extends BaseController
                 'zego_user_id' => optional($customer)->zego_user_id,
                 'connect_type' => $appointment->connect_type,
                 'service_type' => $appointment->service_type,
-                'date' => Carbon::parse($appointment->date)->format('d-M-Y'),
+                'date' => fmt_date($appointment->date, 'd-M-Y'),
                 'time' => $appointment->time_period,
                 'duration' => $appointment->duration,
                 'booking_status_name' => Status::where('id', $appointment->booking_status)->value('name')
@@ -81,7 +81,7 @@ class AstrologerController extends BaseController
                 return [
                     'id' => $earning->id,
                     'name' => optional($customer)->full_name,
-                    'date' => Carbon::parse($earning->created_at)->format('d-M-Y'),
+                    'date' => user_tz_format($earning->created_at, 'd-M-Y'),
                     'price' => $earning->amount,
                     'connect_type' => optional($earning->appointment)->connect_type,
                     'call_time' => $call_time,
@@ -106,6 +106,7 @@ class AstrologerController extends BaseController
             'gender' => 'required|in:Male,Female,Other',
             'professional_title' => 'required|string',
             'city_id' => 'required',
+            'timezone' => ['nullable', 'timezone'],
         ]);
      
         if($validator->fails()){
@@ -138,6 +139,7 @@ class AstrologerController extends BaseController
             'language' => $request->language,
             'experience' => $request->experience,
             'city_id' => $request->city_id,
+            'timezone' => $request->input('timezone') ?: null,
         ]);
         $isBankDetails = AstrologerBankDetails::where('user_id', $astrologer->id)->exists();
         $data = [
@@ -161,6 +163,7 @@ class AstrologerController extends BaseController
             'device_token' => $astrologer->device_token,
             'profile_picture' => $astrologer->profile_picture,
             'is_bank_details' => $isBankDetails,
+            'timezone' => $astrologer->timezone,
         ];
         return $this->sendResponse($data, 'Profile updated successfully.');
     }
@@ -212,6 +215,7 @@ class AstrologerController extends BaseController
             'device_token' => $astrologer->device_token,
             'profile_picture' => $astrologer->profile_picture,
             'is_bank_details' => $isBankDetails,
+            'timezone' => $astrologer->timezone,
         ];
         return $this->sendResponse($data, 'Profile get successfully.');
     }
@@ -306,8 +310,9 @@ class AstrologerController extends BaseController
                     ->where('status', 1);
 
         if ($request->filled('from') && $request->filled('to')) {
-            $from = Carbon::parse($request->from)->startOfDay();
-            $to = Carbon::parse($request->to)->endOfDay();
+            $tz = app_display_timezone();
+            $from = Carbon::parse($request->from, $tz)->startOfDay()->utc();
+            $to = Carbon::parse($request->to, $tz)->endOfDay()->utc();
             $query->whereBetween('created_at', [$from, $to]);
         }
     
@@ -329,14 +334,7 @@ class AstrologerController extends BaseController
         $earnings = $query->orderBy('id', 'DESC')->paginate($request->per_page);
 
         $earningData = $earnings->groupBy(function ($earning) {
-            $date = $earning->created_at;
-                if ($date->isToday()) {
-                    return 'Today';
-                } elseif ($date->isYesterday()) {
-                    return 'Yesterday';
-                } else {
-                    return $date->format('d-M-Y');
-                }
+            return group_day_label($earning->created_at);
         })->map(function ($group, $date) {
             return [
                 'day' => $date,
@@ -346,7 +344,7 @@ class AstrologerController extends BaseController
                     return [
                         'id' => $earning->id,
                         'name' => $customer?->full_name ?? 'N/A',
-                        'date' => Carbon::parse($earning->created_at)->format('d-M-Y'),
+                        'date' => user_tz_format($earning->created_at, 'd-M-Y'),
                         'price' => $earning->amount,
                         'connect_type' => $earning->appointment->connect_type,
                         'call_time' => $call_time,
@@ -409,22 +407,16 @@ class AstrologerController extends BaseController
         $query = AstrologerWithdrawal::where('astrologer_id', $astrologer->id);
 
         if ($request->filled('from') && $request->filled('to')) {
-            $from = Carbon::parse($request->from)->startOfDay();
-            $to = Carbon::parse($request->to)->endOfDay();
+            $tz = app_display_timezone();
+            $from = Carbon::parse($request->from, $tz)->startOfDay()->utc();
+            $to = Carbon::parse($request->to, $tz)->endOfDay()->utc();
             $query->whereBetween('created_at', [$from, $to]);
         }
 
         $histories = $query->orderBy('id', 'DESC')->paginate($request->per_page);
 
         $historyData = $histories->groupBy(function ($history) {
-            $date = $history->created_at;
-            if ($date->isToday()) {
-                return 'Today';
-            } elseif ($date->isYesterday()) {
-                return 'Yesterday';
-            } else {
-                return $date->format('d-M-Y');
-            }
+            return group_day_label($history->created_at);
         })->map(function ($group, $date) {
             return [
                 'day' => $date,
@@ -433,7 +425,7 @@ class AstrologerController extends BaseController
                     return [
                         'id' => $history->id,
                         'amount' => $history->amount,
-                        'name' => Carbon::parse($history->created_at)->format('d-M-Y'),
+                        'name' => user_tz_format($history->created_at, 'd-M-Y'),
                         'date' => "#" . $history->id,
                         'status' => $status,
                         'reject_reason' => $history->reject_reason,
@@ -461,14 +453,7 @@ class AstrologerController extends BaseController
                         ->paginate($request->per_page);
 
         $historyData = $histories->groupBy(function ($history) {
-            $date = $history->created_at;
-                if ($date->isToday()) {
-                    return 'Today';
-                } elseif ($date->isYesterday()) {
-                    return 'Yesterday';
-                } else {
-                    return $date->format('d-M-Y');
-                }
+            return group_day_label($history->created_at);
         })->map(function ($group, $date) {
             return [
                 'day' => $date,

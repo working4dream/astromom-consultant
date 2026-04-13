@@ -118,7 +118,7 @@
                                         </a>
                                     </td>
                                     <td>{{ $order->typeable?->connect_type }}</td>
-                                    <td>{{ \Carbon\Carbon::parse($order->created_at)->format('d-M-Y') }}</td>
+                                    <td>{{ user_tz_format($order->created_at, 'd-M-Y') }}</td>
                                     <td>{{ $order->typeable?->callLog?->call_time }}</td>
                                     <td>{{ $currencySymbol }} {{ number_format($order->typeable?->earnings?->first()?->amount, 2) }}</td>
                                 </tr>

@@ -80,7 +80,18 @@ return [
     |
     */
 
-    'timezone' => 'Asia/Kolkata',
+    'timezone' => env('APP_TIMEZONE', 'UTC'),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Display timezone (admin UI, APIs formatting, date filters)
+    |--------------------------------------------------------------------------
+    | Used when the user has no personal timezone. Individual users may
+    | override via users.timezone. Must be a valid PHP timezone identifier.
+    |
+    */
+
+    'display_timezone' => env('APP_DISPLAY_TIMEZONE', 'Asia/Kolkata'),
 
     /*
     |--------------------------------------------------------------------------

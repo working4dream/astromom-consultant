@@ -77,7 +77,7 @@ class DisputeController extends Controller
                 'comment' => $message->message,
                 'full_name' => $message->user()->withTrashed()->first()->full_name,
                 'profile_picture' => $message->user()->withTrashed()->first()->profile_picture,
-                'created_at' => Carbon::parse($message->created_at)->format('d-M-Y'),
+                'created_at' => user_tz_format($message->created_at, 'd-M-Y'),
             ];
         });
 

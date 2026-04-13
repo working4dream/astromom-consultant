@@ -188,6 +188,7 @@ class CustomerController extends BaseController
             'gender' => 'required|in:Male,Female,Other',
             'dob' => 'required',
             'city_id' => 'required',
+            'timezone' => ['nullable', 'timezone'],
         ]);
      
         if($validator->fails()){
@@ -205,6 +206,7 @@ class CustomerController extends BaseController
             'gender' => $request->gender,
             'dob' => $request->dob,
             'city_id' => $request->city_id,
+            'timezone' => $request->input('timezone') ?: null,
         ]);
 
         $data = [
@@ -224,6 +226,7 @@ class CustomerController extends BaseController
             'profile_picture' => $customer->profile_picture,
             'device_name' => $customer->device_name,
             'referral_code' => $customer->referral_code,
+            'timezone' => $customer->timezone,
         ];
         return $this->sendResponse($data, 'Profile updated successfully.');
     }
@@ -269,6 +272,7 @@ class CustomerController extends BaseController
             'profile_picture' => $customer->profile_picture,
             'device_name' => $customer->device_name,
             'referral_code' => $customer->referral_code,
+            'timezone' => $customer->timezone,
         ];
         return $this->sendResponse($data, 'Profile get successfully.');
     }

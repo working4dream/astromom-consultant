@@ -385,17 +385,15 @@ class ZegoController extends BaseController
             if ($appointment) {
                 $callLog = CallLog::where('appointment_id', $appointment->id)->where('status',25)->latest()->first();
                 if($callLog && $callLog->ended_at){
-                    $date = \Carbon\Carbon::parse($callLog?->date);
-                    $formattedDate = $date->isToday() ? 'Today' : ($date->isYesterday() ? 'Yesterday' : $date->format('d M Y'));
+                    $formattedDate = appointment_day_label($callLog?->date, 'd M Y');
             
-                    $time = \Carbon\Carbon::parse($callLog?->ended_at)->format('h:i A');
+                    $time = user_tz_format($callLog?->ended_at, 'h:i A');
                     return $this->sendResponse(
                         (object) [], 
                         "Your last session ended on {$formattedDate}, {$time}. Resume your conversation seamlessly with new booking!"
                     );
                 }else {
-                    $date = \Carbon\Carbon::parse($appointment->date);
-                    $formattedDate = $date->isToday() ? 'Today' : ($date->isYesterday() ? 'Yesterday' : $date->format('d M Y'));
+                    $formattedDate = appointment_day_label($appointment->date, 'd M Y');
             
                     $time = \Carbon\Carbon::parse($appointment->end_time)->format('h:i A');
                     return $this->sendResponse(
@@ -419,18 +417,16 @@ class ZegoController extends BaseController
             if ($appointment) {
                 $callLog = CallLog::where('appointment_id', $appointment->id)->where('status',25)->latest()->first();
                 if($callLog?->ended_at){
-                    $date = \Carbon\Carbon::parse($callLog?->date);
-                    $formattedDate = $date->isToday() ? 'Today' : ($date->isYesterday() ? 'Yesterday' : $date->format('d M Y'));
+                    $formattedDate = appointment_day_label($callLog?->date, 'd M Y');
             
-                    $time = \Carbon\Carbon::parse($callLog?->ended_at)->format('h:i A');
+                    $time = user_tz_format($callLog?->ended_at, 'h:i A');
                     $customerName = $appointment->customer->full_name;
                     return $this->sendResponse(
                         (object) [], 
                         "{$customerName} ended last session on {$formattedDate}, {$time}."
                     );
                 }else {
-                    $date = \Carbon\Carbon::parse($appointment->date);
-                    $formattedDate = $date->isToday() ? 'Today' : ($date->isYesterday() ? 'Yesterday' : $date->format('d M Y'));
+                    $formattedDate = appointment_day_label($appointment->date, 'd M Y');
             
                     $time = \Carbon\Carbon::parse($appointment->end_time)->format('h:i A');
                     return $this->sendResponse(

@@ -13,7 +13,9 @@ class SettingController extends Controller
     use AwsS3Trait;
     public function editProfile() 
     {
-        return view('settings.edit-profile');
+        return view('settings.edit-profile', [
+            'timezones' => \DateTimeZone::listIdentifiers(\DateTimeZone::ALL),
+        ]);
     }
 
     public function editProfileStore (Request $request) 
@@ -22,6 +24,7 @@ class SettingController extends Controller
             'first_name' => 'required',
             'last_name' => 'required',
             'profile_picture' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'timezone' => ['nullable', 'timezone'],
         ]);
         $admin = Auth::user();
 
@@ -35,6 +38,7 @@ class SettingController extends Controller
         }
         $admin->first_name = $request->first_name;
         $admin->last_name = $request->last_name;
+        $admin->timezone = $request->filled('timezone') ? $request->timezone : null;
         $admin->save();
         
         return redirect()->back()->with('success', 'Profile Updated successfully!');

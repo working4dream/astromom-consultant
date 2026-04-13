@@ -72,6 +72,21 @@
                                 @enderror
                             </div>
                             <div class="col-lg-12">
+                                <label for="timezoneInput" class="form-label">Timezone</label>
+                                <select name="timezone" id="timezoneInput" class="form-select @error('timezone') is-invalid @enderror">
+                                    <option value="">Default ({{ config('app.display_timezone') }})</option>
+                                    @foreach ($timezones as $tz)
+                                        <option value="{{ $tz }}" @selected(old('timezone', auth()->user()->timezone) === $tz)>{{ $tz }}</option>
+                                    @endforeach
+                                </select>
+                                @error('timezone')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                                <small class="text-muted">Dates and reports use this timezone for your account.</small>
+                            </div>
+                            <div class="col-lg-12">
                                 <div class="text-end">
                                     <button type="submit" class="btn btn-primary">Update</button>
                                 </div>

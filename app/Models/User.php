@@ -24,6 +24,7 @@ class User extends Authenticatable
         'first_name',
         'last_name',
         'email',
+        'timezone',
         'email_verified_at',
         'mobile_code',
         'mobile_number',

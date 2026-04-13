@@ -304,7 +304,7 @@ class AppointmentController extends BaseController
             // For Customer
             $deviceTokensCustomer = json_decode(auth('api')->user()->device_token);
             $titleCustomer = "Appointment Confirmed";
-            $messageCustomer = "Your appointment with ". $appointment->astrologer->full_name ." is confirmed for ". Carbon::parse($appointment->date)->format('d-M-Y') ." at ". $appointment->start_time .". Be ready for your session.";
+            $messageCustomer = "Your appointment with ". $appointment->astrologer->full_name ." is confirmed for ". fmt_date($appointment->date, 'd-M-Y') ." at ". $appointment->start_time .". Be ready for your session.";
             $this->sendNotification($titleCustomer, $messageCustomer, $deviceTokensCustomer);
             Notification::create([
                 'user_id' => $appointment->customer->id,
@@ -315,7 +315,7 @@ class AppointmentController extends BaseController
             // For Expert
             $deviceTokens = json_decode($appointment->astrologer->device_token);
             $title = "New Appointment Scheduled";
-            $message = "You have a new appointment with ". $appointment->customer->full_name ." on ". Carbon::parse($appointment->date)->format('d-M-Y') ." at ". $appointment->start_time .". Please be prepared.";
+            $message = "You have a new appointment with ". $appointment->customer->full_name ." on ". fmt_date($appointment->date, 'd-M-Y') ." at ". $appointment->start_time .". Please be prepared.";
             if (!empty($deviceTokens)) {
                 $this->sendNotification($title, $message, $deviceTokens);
             }
@@ -334,7 +334,7 @@ class AppointmentController extends BaseController
                 'zego_user_id' => $astrologer->zego_user_id,
                 'is_online' => $astrologer->is_online,
                 'connect_type' => $appointment->connect_type,
-                'date' => Carbon::parse($appointment->date)->format('d-M-Y'),
+                'date' => fmt_date($appointment->date, 'd-M-Y'),
                 'time' => $appointment->time_period,
                 'duration' => $appointment->duration,
                 'booking_status_name' => Status::find($appointment->booking_status)->name
@@ -790,7 +790,7 @@ class AppointmentController extends BaseController
         // Customer notification
         $deviceTokensCustomer = json_decode($appointment->customer->device_token);
         $titleCustomer = "Appointment Confirmed";
-        $messageCustomer = "Your appointment with " . $appointment->astrologer->full_name . " is confirmed for " . Carbon::parse($appointment->date)->format('d-M-Y') . " at " . $appointment->start_time . ". Be ready for your session.";
+        $messageCustomer = "Your appointment with " . $appointment->astrologer->full_name . " is confirmed for " . fmt_date($appointment->date, 'd-M-Y') . " at " . $appointment->start_time . ". Be ready for your session.";
         
         if(!empty($deviceTokensCustomer)) {
             $this->sendNotification($titleCustomer, $messageCustomer, $deviceTokensCustomer);
@@ -806,7 +806,7 @@ class AppointmentController extends BaseController
         // Expert notification
         $deviceTokens = json_decode($appointment->astrologer->device_token);
         $title = "New Appointment Scheduled";
-        $message = "You have a new appointment with " . $appointment->customer->full_name . " on " . Carbon::parse($appointment->date)->format('d-M-Y') . " at " . $appointment->start_time . ". Please be prepared.";
+        $message = "You have a new appointment with " . $appointment->customer->full_name . " on " . fmt_date($appointment->date, 'd-M-Y') . " at " . $appointment->start_time . ". Please be prepared.";
 
         if (!empty($deviceTokens)) {
             $this->sendNotification($title, $message, $deviceTokens);
@@ -828,7 +828,7 @@ class AppointmentController extends BaseController
             'zego_user_id' => $astrologer->zego_user_id,
             'is_online' => $astrologer->is_online,
             'connect_type' => $appointment->connect_type,
-            'date' => Carbon::parse($appointment->date)->format('d-M-Y'),
+            'date' => fmt_date($appointment->date, 'd-M-Y'),
             'time' => $appointment->time_period,
             'duration' => $appointment->duration,
             'booking_status_name' => Status::find($appointment->booking_status)->name,
@@ -905,14 +905,7 @@ class AppointmentController extends BaseController
             return $this->sendResponse([], 'Appointments not found');
         }
         $data = $appointments->groupBy(function ($appointment) {
-            $date = Carbon::parse($appointment->date);
-                if ($date->isToday()) {
-                    return 'Today';
-                } elseif ($date->isYesterday()) {
-                    return 'Yesterday';
-                } else {
-                    return $date->format('d-M-Y');
-                }
+            return appointment_day_label($appointment->date);
         })->map(function ($group, $date) {
             return [
                 'day' => $date,
@@ -927,7 +920,7 @@ class AppointmentController extends BaseController
                         'is_online' => $astrologer->is_online,
                         'connect_type' => $appointment->connect_type,
                         'service_type' => $appointment->service_type,
-                        'date' => Carbon::parse($appointment->date)->format('d-M-Y'),
+                        'date' => fmt_date($appointment->date, 'd-M-Y'),
                         'time' => $appointment->time_period,
                         'duration' => $appointment->duration,
                         'booking_status_name' => Status::find($appointment->booking_status)->name
@@ -950,14 +943,7 @@ class AppointmentController extends BaseController
             return $this->sendResponse([], 'Appointments not found');
         }
         $data = $appointments->groupBy(function ($appointment) {
-            $date = Carbon::parse($appointment->date);
-                if ($date->isToday()) {
-                    return 'Today';
-                } elseif ($date->isYesterday()) {
-                    return 'Yesterday';
-                } else {
-                    return $date->format('d-M-Y');
-                }
+            return appointment_day_label($appointment->date);
         })->map(function ($group, $date) {
             return [
                 'day' => $date,
@@ -972,7 +958,7 @@ class AppointmentController extends BaseController
                         'is_online' => $astrologer->is_online,
                         'connect_type' => $appointment->connect_type,
                         'service_type' => $appointment->service_type,
-                        'date' => Carbon::parse($appointment->date)->format('d-M-Y'),
+                        'date' => fmt_date($appointment->date, 'd-M-Y'),
                         'time' => $appointment->time_period,
                         'call_time' => $call_time,
                         'booking_status_name' => Status::find($appointment->booking_status)->name
@@ -1161,7 +1147,7 @@ class AppointmentController extends BaseController
             'zego_user_id' => $user->zego_user_id,
             'connect_type' => $appointment->connect_type,
             'service_type' => $appointment->service_type,
-            'date' => Carbon::parse($appointment->date)->format('d-M-Y'),
+            'date' => fmt_date($appointment->date, 'd-M-Y'),
             'time' => $appointment->time_period,
             'duration' => $appointment->duration,
             'booking_status_name' => Status::find($appointment->booking_status)->name
@@ -1182,14 +1168,7 @@ class AppointmentController extends BaseController
             return $this->sendResponse([], 'Appointments not found');
         }
         $data = $appointments->groupBy(function ($appointment) {
-            $date = Carbon::parse($appointment->date);
-                if ($date->isToday()) {
-                    return 'Today';
-                } elseif ($date->isYesterday()) {
-                    return 'Yesterday';
-                } else {
-                    return $date->format('d-M-Y');
-                }
+            return appointment_day_label($appointment->date);
         })->map(function ($group, $date) {
             return [
                 'day' => $date,
@@ -1202,7 +1181,7 @@ class AppointmentController extends BaseController
                         'zego_user_id' => $customer->zego_user_id,
                         'connect_type' => $appointment->connect_type,
                         'service_type' => $appointment->service_type,
-                        'date' => Carbon::parse($appointment->date)->format('d-M-Y'),
+                        'date' => fmt_date($appointment->date, 'd-M-Y'),
                         'time' => $appointment->time_period,
                         'duration' => $appointment->duration,
                         'booking_status_name' => Status::find($appointment->booking_status)->name
@@ -1225,14 +1204,7 @@ class AppointmentController extends BaseController
             return $this->sendResponse([], 'Appointments not found');
         }
         $data = $appointments->groupBy(function ($appointment) {
-            $date = Carbon::parse($appointment->date);
-                if ($date->isToday()) {
-                    return 'Today';
-                } elseif ($date->isYesterday()) {
-                    return 'Yesterday';
-                } else {
-                    return $date->format('d-M-Y');
-                }
+            return appointment_day_label($appointment->date);
         })->map(function ($group, $date) {
             return [
                 'day' => $date,
@@ -1246,7 +1218,7 @@ class AppointmentController extends BaseController
                         'professional_title' => $customer->professional_title,
                         'connect_type' => $appointment->connect_type,
                         'service_type' => $appointment->service_type,
-                        'date' => Carbon::parse($appointment->date)->format('d-M-Y'),
+                        'date' => fmt_date($appointment->date, 'd-M-Y'),
                         'time' => $appointment->time_period,
                         'call_time' => $call_time,
                         'booking_status_name' => Status::find($appointment->booking_status)->name
@@ -1325,7 +1297,7 @@ class AppointmentController extends BaseController
             'zego_user_id' => $user->zego_user_id,
             'connect_type' => $appointment->connect_type,
             'service_type' => $appointment->service_type,
-            'date' => Carbon::parse($appointment->date)->format('d-M-Y'),
+            'date' => fmt_date($appointment->date, 'd-M-Y'),
             'time' => $appointment->time_period,
             'duration' => $appointment->duration,
             'booking_status_name' => Status::find($appointment->booking_status)->name

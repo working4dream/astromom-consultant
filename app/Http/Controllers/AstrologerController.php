@@ -39,18 +39,12 @@ class AstrologerController extends Controller
 
     public function index(Request $request)
     {
-        $start_date = now()->startOfMonth()->startOfDay();
-        $end_date = now()->endOfDay();
+        [$start_date, $end_date] = default_month_range_utc();
 
         if ($request->has('date_range') && ! empty($request->date_range)) {
-            $dates = explode(' - ', $request->date_range);
-            if (count($dates) === 2) {
-                $start_date = \Carbon\Carbon::createFromFormat('d M, Y', trim($dates[0]))->startOfDay();
-                $end_date = \Carbon\Carbon::createFromFormat('d M, Y', trim($dates[1]))->endOfDay();
-            } elseif (count($dates) === 1) {
-                $single_date = \Carbon\Carbon::createFromFormat('d M, Y', trim($dates[0]));
-                $start_date = $single_date->copy()->startOfDay();
-                $end_date = $single_date->copy()->endOfDay();
+            $parsed = parse_daterange_string_to_utc($request->date_range, ' - ');
+            if ($parsed) {
+                [$start_date, $end_date] = $parsed;
             }
         }
 

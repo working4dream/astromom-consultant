@@ -175,7 +175,12 @@ class SettingController extends BaseController
         })
         ->values();
 
-        return $this->sendResponse($data, 'Branding retrieved successfully');
+        $data->push([
+            'name' => 'currency_symbol',
+            'value' => config('app.currency_symbol'),
+        ]);
+
+        return $this->sendResponse($data->values(), 'Branding retrieved successfully');
     }
     public function getFeatures()
     {

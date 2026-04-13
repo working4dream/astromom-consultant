@@ -129,7 +129,7 @@
                                             </a>
                                         </td>
                                         <td>{{ $order->typeable?->callLog?->call_time }}</td>
-                                        <td>{{ $order->created_at }}</td>
+                                        <td>{{ user_tz_format($order->created_at, 'd-M-Y H:i') }}</td>
                                         <td>
                                             <div class="dropdown d-inline-block">
                                                 <button class="btn btn-soft-secondary btn-sm dropdown" type="button"

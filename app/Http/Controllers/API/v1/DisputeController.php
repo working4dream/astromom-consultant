@@ -54,7 +54,7 @@ class DisputeController extends BaseController
             $uploadedUrl = $this->uploadFileToS3($file, 'dispute');
             $dispute->update(['file' => $uploadedUrl]);
         }
-        $dispute->appointment_date = Carbon::parse($request->appointment_date)->format('d-M-Y');
+        $dispute->appointment_date = fmt_date($request->appointment_date, 'd-M-Y');
         return $this->sendResponse($dispute, 'Dispute submitted successfully.');
     }
 
@@ -62,14 +62,7 @@ class DisputeController extends BaseController
     {
         $disputes = Dispute::where('customer_id', auth('api')->user()->id)->orderBy('created_at', 'desc')->paginate($request->per_page);
         $data = $disputes->groupBy(function ($dispute) {
-            $date = $dispute->created_at;
-                if ($date->isToday()) {
-                    return 'Today';
-                } elseif ($date->isYesterday()) {
-                    return 'Yesterday';
-                } else {
-                    return $date->format('d-M-Y');
-                }
+            return group_day_label($dispute->created_at);
         })->map(function ($group, $date) {
             return [
                 'day' => $date,
@@ -78,7 +71,7 @@ class DisputeController extends BaseController
                         'id' => $dispute->id,
                         'ticket_id' => '#'.$dispute->ticket_id,
                         'description' => $dispute->description,
-                        'time' => Carbon::parse($dispute->created_at)->format('h:i A'),
+                        'time' => user_tz_format($dispute->created_at, 'h:i A'),
                         'status' => $dispute->status === 1 ? 'Open' : 'Closed',
                     ];
                 }),

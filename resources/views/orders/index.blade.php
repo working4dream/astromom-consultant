@@ -151,7 +151,7 @@
                                             @endphp
                                             <span class="badge {{ $badgeClass }} ">{{ $order->status?->name }}</span>
                                         </td>
-                                        <td>{{ $order->created_at }}</td>
+                                        <td>{{ user_tz_format($order->created_at, 'd-M-Y H:i') }}</td>
                                         @php
                                             $lastLoggedInAt =
                                                 $order->customer?->last_logged_in_at ??

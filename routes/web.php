@@ -66,7 +66,7 @@ Route::prefix('admin')->group(function () {
    Route::get('login', [LoginController::class, 'showLoginForm'])->name('admin.login');
    Route::post('login', [LoginController::class, 'login']);
    Route::post('logout', [LoginController::class, 'logout'])->name('admin.logout');
-   Route::group(['middleware' => ['auth']], function () {
+   Route::group(['middleware' => ['auth', \App\Http\Middleware\SetUserDisplayTimezone::class]], function () {
       Route::get('/dashboard', [HomeController::class, 'dashboard'])->name('admin.dashboard');
 
       Route::prefix('products')->group(function () {

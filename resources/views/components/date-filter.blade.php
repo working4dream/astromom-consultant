@@ -1,7 +1,7 @@
 @props(['action' => ''])
 @php
-    $defaultStart = now()->startOfMonth()->format('d M, Y');
-    $defaultEnd = now()->endOfMonth()->format('d M, Y');
+    $defaultStart = \Carbon\Carbon::now(app_display_timezone())->startOfMonth()->format('d M, Y');
+    $defaultEnd = \Carbon\Carbon::now(app_display_timezone())->endOfMonth()->format('d M, Y');
     $selectedRange = request('date_range') ?? "$defaultStart to $defaultEnd";
 @endphp
 <div class="mt-3 mt-lg-0">

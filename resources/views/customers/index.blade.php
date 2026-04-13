@@ -105,7 +105,7 @@
                                         </td>
                                         <td>
                                             @if ($customer->dob)
-                                                {{ \Carbon\Carbon::parse($customer->dob)->format('d-m-Y') }}
+                                                {{ fmt_date($customer->dob, 'd-m-Y') }}
                                             @endif
                                         </td>
                                         <td>
@@ -125,7 +125,7 @@
                                         </td>
                                         <td>
                                             @if ($customer->last_logged_in_at)
-                                                {{ \Carbon\Carbon::parse($customer->last_logged_in_at)->format('d-m-Y H:i:s') }}
+                                                {{ user_tz_format($customer->last_logged_in_at, 'd-m-Y H:i:s') }}
                                             @endif
                                         </td>
                                         <td>

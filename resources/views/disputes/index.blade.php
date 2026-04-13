@@ -163,7 +163,7 @@
                                             </a>
                                         </td>
                                         <td>{{ $dispute->reason }}</td>
-                                        <td>{{ \Carbon\Carbon::parse($dispute->appointment_date)->format('d-m-Y') }}</td>
+                                        <td>{{ fmt_date($dispute->appointment_date, 'd-m-Y') }}</td>
                                         <td>{!! $ticketStatus !!}</td>
                                         <td>
                                             <div class="dropdown d-inline-block">

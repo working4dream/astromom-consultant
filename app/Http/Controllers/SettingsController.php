@@ -41,8 +41,9 @@ class SettingsController extends Controller
             $dates = explode(' to ', $request->date_range);
             if (count($dates) === 2) {
                 try {
-                    $start_date = \Carbon\Carbon::createFromFormat('d M, Y', trim($dates[0]))->format('Y-m-d');
-                    $end_date = \Carbon\Carbon::createFromFormat('d M, Y', trim($dates[1]))->format('Y-m-d');
+                    $tz = app_display_timezone();
+                    $start_date = \Carbon\Carbon::createFromFormat('d M, Y', trim($dates[0]), $tz)->format('Y-m-d');
+                    $end_date = \Carbon\Carbon::createFromFormat('d M, Y', trim($dates[1]), $tz)->format('Y-m-d');
                 } catch (\Exception $e) {
                     return redirect()->back()->withErrors(['date_range' => 'Invalid date format. Please select a valid date range.']);
                 }
@@ -73,8 +74,9 @@ class SettingsController extends Controller
             $dates = explode(' to ', $request->date_range);
             if (count($dates) === 2) {
                 try {
-                    $start_date = \Carbon\Carbon::createFromFormat('d M, Y', trim($dates[0]))->format('Y-m-d');
-                    $end_date = \Carbon\Carbon::createFromFormat('d M, Y', trim($dates[1]))->format('Y-m-d');
+                    $tz = app_display_timezone();
+                    $start_date = \Carbon\Carbon::createFromFormat('d M, Y', trim($dates[0]), $tz)->format('Y-m-d');
+                    $end_date = \Carbon\Carbon::createFromFormat('d M, Y', trim($dates[1]), $tz)->format('Y-m-d');
                 } catch (\Exception $e) {
                     return redirect()->back()->withErrors(['date_range' => 'Invalid date format. Please select a valid date range.']);
                 }

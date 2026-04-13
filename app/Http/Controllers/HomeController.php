@@ -25,14 +25,11 @@ class HomeController extends Controller
 
     public function dashboard(Request $request)
     {
-        $start_date = now()->startOfMonth()->startOfDay();
-        $end_date = now()->endOfDay();
-
-        if ($request->has('date_range')) {
-            $dates = explode(' - ', $request->date_range);
-            if (count($dates) === 2) {
-                $start_date = \Carbon\Carbon::createFromFormat('d M, Y', trim($dates[0]))->startOfDay();
-                $end_date = \Carbon\Carbon::createFromFormat('d M, Y', trim($dates[1]))->endOfDay();
+        [$start_date, $end_date] = default_month_range_utc();
+        if ($request->filled('date_range')) {
+            $parsed = parse_daterange_string_to_utc($request->date_range, ' - ');
+            if ($parsed) {
+                [$start_date, $end_date] = $parsed;
             }
         }
 
@@ -129,11 +126,12 @@ class HomeController extends Controller
 
     public function getSalesData($range)
     {
+        $tz = app_display_timezone();
         if ($range === 'daily') {
-            $startDate = Carbon::today()->subDays(15);
+            $startDate = Carbon::now($tz)->subDays(15)->startOfDay()->utc();
     
             $salesData = Order::where('order_status', 7)
-                ->whereDate('created_at', '>=', $startDate)
+                ->where('created_at', '>=', $startDate)
                 ->select(
                     DB::raw("DATE(created_at) as label"),
                     DB::raw("SUM(total_price) as total_sales")
@@ -143,10 +141,10 @@ class HomeController extends Controller
                 ->get();
     
         } elseif ($range === 'weekly') {
-            $startDate = Carbon::now()->subWeeks(7)->startOfWeek();
+            $startDate = Carbon::now($tz)->subWeeks(7)->startOfWeek()->startOfDay()->utc();
     
             $salesData = Order::where('order_status', 7)
-            ->whereDate('created_at', '>=', $startDate) 
+            ->where('created_at', '>=', $startDate) 
                 ->select(
                     DB::raw("
                         CONCAT(
@@ -161,10 +159,10 @@ class HomeController extends Controller
                 ->orderBy(DB::raw("YEARWEEK(created_at, 1)"))
                 ->get();
         } else {
-            $startDate = Carbon::now()->subMonths(11)->startOfMonth();
+            $startDate = Carbon::now($tz)->subMonths(11)->startOfMonth()->startOfDay()->utc();
     
             $salesData = Order::where('order_status', 7)
-                ->whereDate('created_at', '>=', $startDate)
+                ->where('created_at', '>=', $startDate)
                 ->select(
                     DB::raw("DATE_FORMAT(created_at, '%M %Y') as label"),
                     DB::raw("SUM(total_price) as total_sales")
@@ -212,16 +210,17 @@ class HomeController extends Controller
                 return '';
             })
             ->addColumn('created_at', function ($row) {
-                return $row->created_at->format('Y-m-d');
+                return user_tz_format($row->created_at, 'Y-m-d');
             })
             ->rawColumns(['status', 'order_id_link'])
             ->make(true);
 
     }
     public function freeChatUsage(Request $request){
-        $startDate = Carbon::now()->subMonths(11)->startOfMonth();
+        $tz = app_display_timezone();
+        $startDate = Carbon::now($tz)->subMonths(11)->startOfMonth()->startOfDay()->utc();
         $orders = DB::table('orders')
-            ->whereDate('created_at', '>=', $startDate)
+            ->where('created_at', '>=', $startDate)
             ->selectRaw("DATE_FORMAT(created_at, '%b %Y') as month_label, COUNT(*) as total")
             ->where('payment_id', 'freeChat')
             ->where('order_status', 7)
@@ -249,7 +248,7 @@ class HomeController extends Controller
                 return $row->first_name . ' ' . $row->last_name;
             })
             ->addColumn('created_at', function ($row) {
-                return $row->created_at->format('Y-m-d H:i:s');
+                return user_tz_format($row->created_at, 'Y-m-d H:i:s');
             })
             ->addColumn('contact_details', function ($row) {
                 return $row->email . '<br>+' . $row->mobile_code . ' ' . $row->mobile_number;

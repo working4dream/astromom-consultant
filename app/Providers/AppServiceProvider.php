@@ -30,5 +30,6 @@ class AppServiceProvider extends ServiceProvider
         Schema::defaultStringLength(191);
         Paginator::useBootstrapFive();
         View::share('currencySymbol', config('app.currency_symbol'));
+        config(['app.current_display_timezone' => config('app.display_timezone')]);
     }
 }

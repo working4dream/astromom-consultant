@@ -27,14 +27,7 @@ class OrderController extends BaseController
             return $this->sendResponse([], 'Order not found');
         }
         $data = $orders->groupBy(function ($order) use ($user) {
-            $date = $order->created_at;
-                if ($date->isToday()) {
-                    return 'Today';
-                } elseif ($date->isYesterday()) {
-                    return 'Yesterday';
-                } else {
-                    return $date->format('d-M-Y');
-                }
+            return group_day_label($order->created_at);
         })->map(function ($group, $date) use ($user) {
             return [
                 'day' => $date,
@@ -57,7 +50,7 @@ class OrderController extends BaseController
                             $heading = 'Appointment with';
                             $image = $customer?->profile_picture;
                             $title = $customer?->professional_title;
-                            $date = Carbon::parse($order->typeable?->date)->format('d-M-Y');
+                            $date = fmt_date($order->typeable?->date, 'd-M-Y');
                             $time = $order->typeable?->time_period;
                             $connectType = $order->typeable?->connect_type;
                         } elseif ($user->hasRole('customer')){
@@ -67,7 +60,7 @@ class OrderController extends BaseController
                             $heading = 'Appointment with';
                             $image = $astrologer?->profile_picture;
                             $title = $astrologer?->professional_title;
-                            $date = Carbon::parse($order->typeable?->date)->format('d-M-Y');
+                            $date = fmt_date($order->typeable?->date, 'd-M-Y');
                             $time = $order->typeable?->time_period;
                             $connectType = $order->typeable?->connect_type;
                         }
@@ -205,14 +198,7 @@ class OrderController extends BaseController
         $user = auth('api')->user();
         $requests = RefundRequest::where('customer_id', $user->id)->orderBy('created_at', 'desc')->paginate($request->per_page);
         $data = $requests->groupBy(function ($request) {
-            $date = $request->created_at;
-                if ($date->isToday()) {
-                    return 'Today';
-                } elseif ($date->isYesterday()) {
-                    return 'Yesterday';
-                } else {
-                    return $date->format('d-M-Y');
-                }
+            return group_day_label($request->created_at);
         })->map(function ($group, $date) {
             return [
                 'day' => $date,
@@ -225,7 +211,7 @@ class OrderController extends BaseController
                         'name' => $astrologer->full_name,
                         'profile_picture' => $astrologer->profile_picture,
                         'connect_type' => $request->order->typeable->connect_type,
-                        'request_date' => Carbon::parse($request->created_at)->format('d-M-Y'),
+                        'request_date' => user_tz_format($request->created_at, 'd-M-Y'),
                         'refund_amount' => $request->order->total_price,
                         'status' => $status,
                     ];

@@ -82,7 +82,7 @@
                                                     <small
                                                         class="text-muted mb-0 d-block">{{ $order->typeable?->astrologer->professional_title }}</small>
                                                     <small
-                                                        class="text-muted mb-0">{{ \Carbon\Carbon::parse($order->typeable?->date)->format('d-M-Y') }}
+                                                        class="text-muted mb-0">{{ fmt_date($order->typeable?->date, 'd-M-Y') }}
                                                         &#8226; </small>
                                                     <small
                                                         class="text-muted mb-0">{{ $order->typeable?->time_period }}</small>
@@ -100,11 +100,11 @@
                                                     </h5>
                                                     <small class="text-muted mb-0 d-block">
                                                         <span class="fw-bold">Booked On: </span>
-                                                        {{ \Carbon\Carbon::parse($order->typeable?->created_at)->format('d-M-Y') }}
+                                                        {{ user_tz_format($order->typeable?->created_at, 'd-M-Y') }}
                                                     </small>
                                                     <small class="text-muted mb-0 d-block">
                                                         <span class="fw-bold">Delivered On: </span>
-                                                        {{ \Carbon\Carbon::parse($order->typeable?->created_at)->addDays(3)->format('d-M-Y') }}
+                                                        {{ user_tz_format(\Carbon\Carbon::parse($order->typeable?->created_at)->addDays(3), 'd-M-Y') }}
                                                     </small>
                                                 </div>
                                             </div>
@@ -218,7 +218,7 @@
                                 @endif
                             </li>
                             <li><span class="fw-bold">Date:
-                                </span>{{ \Carbon\Carbon::parse($order->typeable?->date)->format('d-M-Y') }}
+                                </span>{{ fmt_date($order->typeable?->date, 'd-M-Y') }}
                             </li>
                             <li><span class="fw-bold">Time Period:
                                 </span>{{ $order->typeable?->time_period }}</li>

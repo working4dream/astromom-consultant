@@ -185,7 +185,7 @@
                                                         </td>
                                                         <td>{{ $currencySymbol }} {{ $appointment->total_price }}
                                                         </td>
-                                                        <td>{{ \Carbon\Carbon::parse($appointment->typeable?->date)->format('d-M-Y') }}
+                                                        <td>{{ fmt_date($appointment->typeable?->date, 'd-M-Y') }}
                                                         </td>
                                                         <td>{{ $appointment->typeable?->time_period }}</td>
                                                         <td>{{ $appointment->typeable?->callLog?->call_time }}</td>
@@ -285,7 +285,7 @@
                                                             <span
                                                                 class="badge {{ $badgeClass }} ">{{ $order->status?->name }}</span>
                                                         </td>
-                                                        <td>{{ \Carbon\Carbon::parse($order->created_at)->format('d-M-Y') }}</td>
+                                                        <td>{{ user_tz_format($order->created_at, 'd-M-Y') }}</td>
                                                     </tr>
                                                 @endforeach
                                             </tbody>
@@ -304,7 +304,7 @@
                                                 </div>
                                                 <div class="text-end text-muted" style="white-space: nowrap;">
                                                     <small>
-                                                        {{ \Carbon\Carbon::parse($notification->created_at)->format('d M Y, h:i A') }}
+                                                        {{ user_tz_format($notification->created_at, 'd M Y, h:i A') }}
                                                     </small>
                                                 </div>
                                             </div>

@@ -137,7 +137,7 @@
                         </td>
                         <td>
                             @if ($astrologer->last_logged_in_at)
-                                {{ \Carbon\Carbon::parse($astrologer->last_logged_in_at)->format('d-m-Y H:i:s') }}
+                                {{ user_tz_format($astrologer->last_logged_in_at, 'd-m-Y H:i:s') }}
                             @else
                                 -
                             @endif

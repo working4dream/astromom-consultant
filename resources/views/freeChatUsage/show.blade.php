@@ -83,7 +83,7 @@
                                                             @foreach ($groupedMessages as $date => $messagesForDate)
                                                                 <div class="sticky-date-header text-center mb-2">
                                                                     <span class="badge bg-primary text-white">
-                                                                        {{ \Carbon\Carbon::parse($date)->isToday() ? 'Today' : (\Carbon\Carbon::parse($date)->isYesterday() ? 'Yesterday' : \Carbon\Carbon::parse($date)->format('d M Y')) }}
+                                                                        {{ appointment_day_label($date, 'd M Y') }}
                                                                     </span>
                                                                 </div>
 
@@ -136,7 +136,7 @@
                                                                                         class="name">{{ $sender->first_name . ' ' . $sender->last_name }}</span>
                                                                                     <small
                                                                                         class="text-muted time small-text">
-                                                                                        {{ \Carbon\Carbon::parse($message->created_at)->format('h:i A') }}
+                                                                                        {{ user_tz_format($message->created_at, 'h:i A') }}
                                                                                     </small>
                                                                                 </div>
                                                                             </div>

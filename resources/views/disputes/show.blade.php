@@ -66,7 +66,7 @@ Dispute Details
                                                                         data-question="{{ $discussion->booking_id }}"
                                                                         data-comment="{{ $discussion->reason }}"
                                                                         data-user="{{ $discussion->user()->withTrashed()->first()->full_name }}"
-                                                                        data-date="{{ \Carbon\Carbon::parse($discussion->created_at)->format('d-M-Y') }}"
+                                                                        data-date="{{ user_tz_format($discussion->created_at, 'd-M-Y') }}"
                                                                         data-image="{{ $discussion->user()->withTrashed()->first()->profile_picture }}">
 
                                                                     </li>
@@ -116,7 +116,7 @@ Dispute Details
                                                         <div> Appointment Date </div>
                                                     </div>
                                                     <div class="col-xxl-6 col-md-6">
-                                                        {{ \Carbon\Carbon::parse($dispute->appointment_date)->format('d-m-Y') }}
+                                                        {{ fmt_date($dispute->appointment_date, 'd-m-Y') }}
                                                     </div>
                                                 </div>
                                                 <div class="row pt-2">

@@ -17,14 +17,7 @@ class NotificationController extends BaseController
         }
 
         $data = $notifications->groupBy(function ($notification) {
-            $date = $notification->created_at;
-                if ($date->isToday()) {
-                    return 'Today';
-                } elseif ($date->isYesterday()) {
-                    return 'Yesterday';
-                } else {
-                    return $date->format('d-M-Y');
-                }
+            return group_day_label($notification->created_at);
         })->map(function ($group, $date) {
             return [
                 'day' => $date,
@@ -39,7 +32,7 @@ class NotificationController extends BaseController
                         'type' => $notification->type,
                         'link' => $notification->link,
                         'is_seen' => $notification->is_seen,
-                        'time_ago' => $createdAt->diffInHours(now()) < 24 ? $createdAt->diffForHumans() : $createdAt->format('h:i A'),
+                        'time_ago' => $createdAt->diffInHours(now()) < 24 ? $createdAt->diffForHumans() : user_tz_format($notification->created_at, 'h:i A'),
                     ];
                 }),
             ];
