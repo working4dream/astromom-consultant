@@ -113,19 +113,26 @@
                     </a>
                 </li>
                 <li class="nav-item">
+                    <a class="nav-link menu-link {{ request()->routeIs('admin.notification.index') ? 'active' : '' }}"
+                        href="{{ route('admin.notification.index') }}">
+                        <i class="ri-notification-3-fill"></i>
+                        <span>Notifications</span>
+                    </a>
+                </li>
+                <li class="nav-item">
                     <a class="nav-link menu-link {{ request()->routeIs('admin.settings.index') ? 'active' : '' }}"
                         href="{{ route('admin.settings.index') }}">
                         <i class="ri-settings-5-fill"></i>
                         <span>Settings</span>
                     </a>
                 </li>
-                <li class="nav-item">
+                {{-- <li class="nav-item">
                     <a class="nav-link menu-link {{ request()->routeIs('admin.faqs.index') ? 'active' : '' }}"
                         href="{{ route('admin.faqs.index') }}">
                         <i class="ri-question-line"></i>
                         <span>FAQs</span>
                     </a>
-                </li>
+                </li> --}}
             </ul>
         </div>
     </div>

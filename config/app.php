@@ -80,7 +80,8 @@ return [
     |
     */
 
-    'timezone' => env('APP_TIMEZONE', 'UTC'),
+    // 'timezone' => env('APP_TIMEZONE', 'UTC'),
+    'timezone' => 'Asia/Kolkata',
 
     /*
     |--------------------------------------------------------------------------
@@ -91,7 +92,7 @@ return [
     |
     */
 
-    'display_timezone' => env('APP_DISPLAY_TIMEZONE', 'Asia/Kolkata'),
+    // 'display_timezone' => env('APP_DISPLAY_TIMEZONE', 'Asia/Kolkata'),
 
     /*
     |--------------------------------------------------------------------------

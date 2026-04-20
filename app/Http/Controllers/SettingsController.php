@@ -21,7 +21,7 @@ class SettingsController extends Controller
             'voice_30_min_price','voice_30_max_price','voice_60_min_price','voice_60_max_price',
             'chat_min_price','chat_max_price','voice_min_price','voice_max_price','video_min_price','video_max_price',
             'specialization','expertise','keywords','name_correction','name_correction_exclusive',
-            'relationship_comparability', 'appointment_gst_type'])) {
+            'relationship_comparability', 'appointment_gst_type', 'free_chat_status', 'free_chat_limit'])) {
            Setting::updateOrCreate(['name' => $key], ['name' => $key,'data' => $value]);
         }
       }

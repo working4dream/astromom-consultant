@@ -13,17 +13,16 @@ use App\Http\Controllers\API\v1\AstrologerController;
 use App\Http\Controllers\API\v1\AppointmentController;
 use App\Http\Controllers\API\v1\NotificationController;
 use App\Http\Controllers\API\v1\HelpAndSupportController;
-use App\Http\Middleware\SetUserDisplayTimezone;
 
 
 // API Version 1
 Route::post('v1/login', [AuthController::class, 'login']);
 Route::post('login', [AuthController::class, 'login']); // POST /api/login — alias
 Route::post('v1/verifyOtp', [AuthController::class, 'verifyOtp']);
-Route::middleware(['checkBearerToken', SetUserDisplayTimezone::class])->post('v1/logout', [AuthController::class, 'logout']);
+Route::middleware(['checkBearerToken'])->post('v1/logout', [AuthController::class, 'logout']);
 // Astrologer
 Route::prefix('v1/astrologer')->group(function () {
-    Route::middleware(['checkBearerToken', SetUserDisplayTimezone::class])->group(function () {
+    Route::middleware(['checkBearerToken'])->group(function () {
         // Dashboard
         Route::get('dashboard', [AstrologerController::class, 'dashboard']);
         // Profile
@@ -74,7 +73,7 @@ Route::prefix('v1/astrologer')->group(function () {
 Route::prefix('v1/customer')->group(function () {
     Route::post('register-profile', [CustomerController::class, 'registerProfile']);
 
-    Route::middleware(['checkBearerToken', SetUserDisplayTimezone::class])->group(function () {
+    Route::middleware(['checkBearerToken'])->group(function () {
         // Dashboard
         Route::get('dashboard', [CustomerController::class, 'dashboard']);
         // Profile
@@ -130,7 +129,7 @@ Route::prefix('v1')->group(function () {
     Route::get('get-is-ios-review', [SettingController::class, 'isIOSReview']);
     Route::get('get-branding', [SettingController::class, 'getBranding']);
     Route::get('get-features', [SettingController::class, 'getFeatures']);
-    Route::middleware(['checkBearerToken', SetUserDisplayTimezone::class])->group(function () {
+    Route::middleware(['checkBearerToken'])->group(function () {
         // FAQ
         Route::get('get-faqs', [HelpAndSupportController::class, 'getFaqs']);
         Route::get('get-single-faq/{id}', [HelpAndSupportController::class, 'getSingleFaq']);
@@ -154,14 +153,14 @@ Route::prefix('v1')->group(function () {
 
 // RazorPay
 Route::prefix('v1/razorpay')->group(function () {
-    Route::middleware(['checkBearerToken', SetUserDisplayTimezone::class])->group(function () {
+    Route::middleware(['checkBearerToken'])->group(function () {
         Route::post('create-order', [RazorpayController::class, 'createOrder']);
     });
 });
 
 // Chat
 Route::prefix('v1/chat')->group(function () {
-    Route::middleware(['checkBearerToken', SetUserDisplayTimezone::class])->group(function () {
+    Route::middleware(['checkBearerToken'])->group(function () {
         Route::post('/', [ChatController::class, 'store']);
         Route::get('/conversations', [ChatController::class, 'conversationList']);
         Route::get('messages/{userId}', [ChatController::class, 'index']);

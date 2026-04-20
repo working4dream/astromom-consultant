@@ -20,36 +20,15 @@
             <div class="row gy-4 mt-2">
                 <div class="col-xxl-2 col-md-2">
                     <div>
-                        <label class="form-label">Link Type</label>
+                        <label class="form-label">Link</label>
                     </div>
                 </div>
                 <div class="col-xxl-10 col-md-10">
                     <div>
-                        <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="radio" name="link_type" id="linkUrl"
-                                value="url">
-                            <label class="form-check-label" for="linkUrl">Link (URL)</label>
-                        </div>
-                        <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="radio" name="link_type" id="linkScreen"
-                                value="screen">
-                            <label class="form-check-label" for="linkScreen">Link to App Screen</label>
-                        </div>
-                        <div id="urlInput" class="mt-2" style="display: none;">
-                            <input type="text" name="url" class="form-control" placeholder="Enter URL">
-                            <small class="text-muted">e.g., https://www.google.co.in/</small>
-                        </div>
+                        <input type="hidden" name="link_type" value="url">
+                        <input type="text" name="url" class="form-control" placeholder="Enter URL">
+                        <small class="text-muted">e.g., https://www.google.co.in/</small>
                         @error('url')
-                            <div class="text-danger">{{ $message }}</div>
-                        @enderror
-                        <div id="screenDropdown" class="mt-2" style="display: none;">
-                            <select name="link" class="form-control">
-                                <option value="">Select Screen</option>
-                                <option value="consult_screen">
-                                    Consult Screen</option>
-                            </select>
-                        </div>
-                        @error('link')
                             <div class="text-danger">{{ $message }}</div>
                         @enderror
                     </div>
@@ -132,9 +111,9 @@
                             <td>{{ $banner->bannerClick->count() }}</td>
                             <td>{!! $banner->is_active ? '<span class="badge bg-success">Yes</span>' : '<span class="badge bg-danger">No</span>' !!}</td>
                             <td>
-                                <button class="btn btn-primary btn-icon waves-effect waves-light edit-banner" data-id="{{ $banner->id }}"
-                                    data-banner="{{ $banner->customer_banner }}" data-link-type="{{ $banner->link_type }}" 
-                                    data-link="{{ $banner->link }}"
+                                <button class="btn btn-primary btn-icon waves-effect waves-light edit-banner"
+                                    data-id="{{ $banner->id }}" data-banner="{{ $banner->customer_banner }}"
+                                    data-link-type="{{ $banner->link_type }}" data-link="{{ $banner->link }}"
                                     data-date-range="{{ $banner->date_range }}"
                                     data-active="{{ $banner->is_active }}">
                                     <i class="ri-pencil-fill fs-4"></i>
@@ -177,35 +156,13 @@
 
                     <div class="row gy-4 mt-2">
                         <div class="col-xxl-2 col-md-2">
-                            <label class="form-label">Link Type</label>
+                            <label class="form-label">Link</label>
                         </div>
                         <div class="col-xxl-10 col-md-10">
-                            <div>
-                                <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="radio" name="link_type" id="editLinkUrl"
-                                        value="url">
-                                    <label class="form-check-label" for="editLinkUrl">Link (URL)</label>
-                                </div>
-                                <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="radio" name="link_type"
-                                        id="editLinkScreen" value="screen">
-                                    <label class="form-check-label" for="editLinkScreen">Link to Screen</label>
-                                </div>
-
-                                <!-- URL Input -->
-                                <div id="editUrlInput" class="mt-2" style="display: none;">
-                                    <input type="text" name="url" class="form-control" id="editUrl"
-                                        placeholder="Enter URL">
-                                </div>
-
-                                <!-- Screen Dropdown -->
-                                <div id="editScreenDropdown" class="mt-2" style="display: none;">
-                                    <select name="link" class="form-control" id="editLink">
-                                        <option value="">Select Screen</option>
-                                        <option value="consult_screen">Consult Screen</option>
-                                    </select>
-                                </div>
-                            </div>
+                            <input type="hidden" name="link_type" value="url">
+                            <input type="text" name="url" class="form-control" id="editUrl"
+                                placeholder="Enter URL">
+                            <small class="text-muted">e.g., https://www.google.co.in/</small>
                         </div>
                     </div>
 
@@ -248,27 +205,7 @@
     </div>
 </div>
 
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const linkUrl = document.getElementById('linkUrl');
-        const linkScreen = document.getElementById('linkScreen');
-        const urlInput = document.getElementById('urlInput');
-        const screenDropdown = document.getElementById('screenDropdown');
 
-        function toggleInputs() {
-            if (linkUrl.checked) {
-                urlInput.style.display = 'block';
-                screenDropdown.style.display = 'none';
-            } else if (linkScreen.checked) {
-                urlInput.style.display = 'none';
-                screenDropdown.style.display = 'block';
-            }
-        }
-        linkUrl.addEventListener('change', toggleInputs);
-        linkScreen.addEventListener('change', toggleInputs);
-        toggleInputs(); // Initial check
-    });
-</script>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         const deleteButtons = document.querySelectorAll('.delete-banner');
@@ -314,54 +251,30 @@
     });
 </script>
 <script>
-    $(document).on('click', '.edit-banner', function () {
+    $(document).on('click', '.edit-banner', function() {
         const bannerId = $(this).data('id');
         const banner = $(this).data('banner');
-        const linkType = $(this).data('link-type');
         const link = $(this).data('link');
         const dateRange = $(this).data('date-range');
         const isActive = $(this).data('active');
 
         $('#editBannerId').val(bannerId);
-        $('#editBanner').attr('src', banner); 
+        $('#editBanner').attr('src', banner);
         $('#editDateRange').val(dateRange);
         $('#editIsActive').prop('checked', isActive);
-
-        if (linkType === 'url') {
-            $('#editLinkUrl').prop('checked', true);
-            $('#editUrlInput').show();
-            $('#editScreenDropdown').hide();
-            $('#editUrl').val(link);
-        } else if (linkType === 'screen') {
-            $('#editLinkScreen').prop('checked', true);
-            $('#editUrlInput').hide();
-            $('#editScreenDropdown').show();
-            $('#editLink').val(link);
-        } else {
-            $('#editUrlInput, #editScreenDropdown').hide();
-        }
+        $('#editUrl').val(link);
 
         $('#editBannerModal').modal('show');
-    });
-
-    $('input[name="link_type"]').on('change', function () {
-        if ($(this).val() === 'url') {
-            $('#editUrlInput').show();
-            $('#editScreenDropdown').hide();
-        } else if ($(this).val() === 'screen') {
-            $('#editUrlInput').hide();
-            $('#editScreenDropdown').show();
-        }
     });
 </script>
 <script>
     document.querySelector("#add-button")
-        .addEventListener("click", function (event) {
+        .addEventListener("click", function(event) {
             const isFileUploaded = document.getElementById('uploadedCustomer_bannerFile')?.value;
             if (!isFileUploaded) {
                 event.preventDefault();
-                    document.querySelector(".error-message").textContent =
-                        "Please upload at least one file before submitting.";
+                document.querySelector(".error-message").textContent =
+                    "Please upload at least one file before submitting.";
             }
         });
 </script>

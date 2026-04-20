@@ -1,7 +1,7 @@
 <form action="{{ route('admin.settings.update-price') }}" method="post">
     @csrf
     <div class="row">
-        <div class="col-xxl-6 col-md-6">
+        {{-- <div class="col-xxl-6 col-md-6">
             <div class="card">
                 <div class="card-body">
                     <h5>Book Appointment</h5>
@@ -176,7 +176,7 @@
                     </ul>
                 </div>
             </div>
-        </div>
+        </div> --}}
         <div class="col-xxl-6 col-md-6">
             <div class="card">
                 <div class="card-body">
@@ -229,7 +229,7 @@
                                 </div>
                             </div>
                         </div>
-                        <li>Voice </li>
+                        {{-- <li>Voice </li>
 
                         <div class="row gy-4 mt-1">
                             <div class="col-xxl-4 col-md-4">
@@ -252,8 +252,8 @@
 
                                 </div>
                             </div>
-                        </div>
-                        <div class="row gy-4 mt-1">
+                        </div> --}}
+                        {{-- <div class="row gy-4 mt-1">
                             <div class="col-xxl-4 col-md-4">
                                 <div>
                                     <label for="voice_max_price" class="form-label booking"> Maximum Price</label>
@@ -321,7 +321,7 @@
 
                                 </div>
                             </div>
-                        </div>
+                        </div> --}}
 
                     </ul>
                     <div class="row gy-4 mt-5">

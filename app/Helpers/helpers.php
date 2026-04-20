@@ -93,7 +93,9 @@ if (!function_exists('getPrimaryColor')) {
 if (! function_exists('app_display_timezone')) {
     function app_display_timezone(): string
     {
-        return config('app.current_display_timezone', config('app.display_timezone', 'UTC'));
+        return config('app.current_display_timezone')
+            ?? config('app.display_timezone')
+            ?? env('APP_DISPLAY_TIMEZONE', 'Asia/Kolkata');
     }
 }
 

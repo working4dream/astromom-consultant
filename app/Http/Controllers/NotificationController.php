@@ -12,19 +12,10 @@ class NotificationController extends Controller
     public function index(Request $request) 
     {
         $query = User::query()->select(['id', 'first_name', 'last_name', 'email', 'mobile_number', 'profile_picture'])
-                    ->whereNotNull('device_token');
-
-        if ($request->has('user_type') && $request->user_type === 'customer') {
-            $query->whereHas('roles', function ($q) {
-                $q->where('name', 'customer');
-            });
-        }
-
-        if ($request->has('user_type') && $request->user_type === 'expert') {
-            $query->whereHas('roles', function ($q) {
-                $q->where('name', 'astrologer');
-            });
-        }
+                    ->whereNotNull('device_token')
+                    ->whereHas('roles', function ($q) {
+                        $q->where('name', 'customer');
+                    });
 
         if ($request->filled('full_name')) {
             $fullName = trim($request->full_name);

@@ -33,15 +33,6 @@
                                     value="{{ request()->email }}">
                             </div>
                             <div class="col-md-2">
-                                <select name="user_type" class="form-control">
-                                    <option value="">User Type</option>
-                                    <option value="customer" @if (request()->user_type == 'customer') selected @endif>Customer
-                                    </option>
-                                    <option value="expert" @if (request()->user_type == 'expert') selected @endif>Expert</option>
-                                </select>
-
-                            </div>
-                            <div class="col-md-2">
                                 <a href="{{ route('admin.notification.index') }}" class="btn btn-soft-secondary"><i
                                         class="ri-refresh-line"></i></a>
                             </div>
@@ -65,7 +56,6 @@
                                     <th><input type="checkbox" id="select-all"></th>
                                     <th>Name</th>
                                     <th>Contact Details</th>
-                                    <th>User Type</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -88,8 +78,6 @@
                                         <td>
                                             {{ $user->email }} <br>
                                             {{ $user->mobile_number }}
-                                        </td>
-                                        <td>{{ $user->getRoleNames()->first() === 'customer' ? 'Customer' : 'Expert' }}
                                         </td>
                                     </tr>
                                 @endforeach
@@ -119,7 +107,7 @@
                 <form method="POST" action="{{ route('admin.notification.send') }}">
                     @csrf
                     <input type="hidden" name="select_all_users" id="select_all_users" value="0">
-                    <input type="hidden" name="user_type" id="user_type" value="{{ request()->user_type }}">
+                    <input type="hidden" name="user_type" id="user_type" value="customer">
                     <div class="modal-header">
                         <h5 class="modal-title" id="sendNotificationModalLabel">Send Notification</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -314,9 +302,6 @@
                 }
             });
     
-            $('select[name="user_type"]').on('change', function () {
-                $('#notificationFilterForm').submit();
-            });
         });
     </script>
     <script>

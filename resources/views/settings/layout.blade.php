@@ -44,7 +44,7 @@
                         <a class="nav-link" id="custom-v-pills-prices-tab" data-bs-toggle="pill"
                             href="#custom-v-pills-prices" role="tab" aria-controls="custom-v-pills-prices"
                             aria-selected="false">
-                            <i class="ri-wallet-3-line d-block fs-20 mb-1"></i> Prices
+                            <i class="ri-settings-3-line d-block fs-20 mb-1"></i> General
                         </a>
                         <a class="nav-link" id="custom-v-pills-messages-tab" data-bs-toggle="pill"
                             href="#custom-v-pills-messages" role="tab" aria-controls="custom-v-pills-messages"
@@ -68,13 +68,13 @@
                             <i class=" bx bx-mobile-alt d-block fs-20 mb-1"></i>
                             App Settings
                         </a>
-                        @if(env('APP_ENV') !== 'production')
-                        <a class="nav-link" id="custom-v-pills-branding-tab" data-bs-toggle="pill"
-                            href="#custom-v-pills-branding" role="tab" aria-controls="custom-v-pills-branding"
-                            aria-selected="false">
-                            <i class=" bx bx-palette d-block fs-20 mb-1"></i>
-                            Branding
-                        </a>
+                        @if (env('APP_ENV') !== 'production')
+                            <a class="nav-link" id="custom-v-pills-branding-tab" data-bs-toggle="pill"
+                                href="#custom-v-pills-branding" role="tab" aria-controls="custom-v-pills-branding"
+                                aria-selected="false">
+                                <i class=" bx bx-palette d-block fs-20 mb-1"></i>
+                                Branding
+                            </a>
                         @endif
                     </div>
                 </div>

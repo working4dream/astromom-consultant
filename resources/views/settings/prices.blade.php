@@ -33,6 +33,50 @@
             </div>
             <div class="row gy-4 mt-2">
                 <div class="col-xxl-3 col-md-2">
+                    <div>
+                        <label for="free_chat_status" class="form-label">
+                            Free Chat
+                        </label>
+                    </div>
+                </div>
+                <div class="col-xxl-9 col-md-10">
+                    <div>
+                        @php
+                            $freeChatStatus = $settings['free_chat_status'] ?? '0';
+                        @endphp
+                        <div class="form-check form-switch mb-3" dir="ltr">
+                            <input type="hidden" name="free_chat_status" value="0">
+                            <input type="checkbox" class="form-check-input" id="free_chat_status"
+                                name="free_chat_status" value="1" {{ $freeChatStatus == '1' ? 'checked' : '' }}>
+                            <label class="form-check-label" for="free_chat_status">Enable Free Chat</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row gy-4 mt-2" id="free_chat_limit_row" style="display: {{ $freeChatStatus == '1' ? 'flex' : 'none' }};">
+                <div class="col-xxl-3 col-md-2">
+                    <div>
+                        <label for="free_chat_limit" class="form-label">
+                            Free Chat Limit
+                        </label>
+                    </div>
+                </div>
+                <div class="col-xxl-9 col-md-10">
+                    <div>
+                        @php
+                            $freeChatLimit = $settings['free_chat_limit'] ?? '1';
+                        @endphp
+                        <select class="form-control" id="free_chat_limit" name="free_chat_limit">
+                            <option value="-1" {{ $freeChatLimit == '-1' ? 'selected' : '' }}>Unlimited</option>
+                            @for($i = 1; $i <= 10; $i++)
+                                <option value="{{ $i }}" {{ $freeChatLimit == $i ? 'selected' : '' }}>{{ $i }}</option>
+                            @endfor
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="row gy-4 mt-2">
+                <div class="col-xxl-3 col-md-2">
                 </div>
                 <div class="col-xxl-9 col-md-10">
                     <button class="btn btn-primary float-end mt-3" onclick="document.querySelector('form').submit();">
@@ -43,3 +87,23 @@
         </form>
     </div>
 </div>
+
+<script>
+    function toggleFreeChatLimit(checkbox) {
+        var limitRow = document.getElementById('free_chat_limit_row');
+        if (checkbox.checked) {
+            limitRow.style.display = 'flex';
+        } else {
+            limitRow.style.display = 'none';
+        }
+    }
+    
+    document.addEventListener("DOMContentLoaded", function() {
+        var checkbox = document.getElementById('free_chat_status');
+        if (checkbox) {
+            checkbox.addEventListener('change', function() {
+                toggleFreeChatLimit(this);
+            });
+        }
+    });
+</script>

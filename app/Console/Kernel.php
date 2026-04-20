@@ -22,7 +22,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('users:mark-offline')->everyMinute();
 
         $schedule->command('astrologers:reset-credits')->daily();
-        $schedule->command('cleanup:old-data')->dailyAt('01:00');
+        // $schedule->command('cleanup:old-data')->dailyAt('01:00');
         $schedule->command('logout:inactive-users')->dailyAt('03:00');
 
     }

@@ -586,6 +586,17 @@ class AppointmentController extends BaseController
 
     private function createFreeChatAppointment($request)
     {
+        $freeChatStatus = \App\Models\Setting::where('name', 'free_chat_status')->value('data');
+        if ($freeChatStatus != '1') {
+            return $this->sendError('Free chat is currently disabled.');
+        }
+
+        $freeChatLimit = \App\Models\Setting::where('name', 'free_chat_limit')->value('data') ?? 1;
+        $freeChatCount = \App\Models\Appointment::where('customer_id', auth('api')->user()->id)->where('payment_id', 'freeChat')->count();
+        if ($freeChatLimit != '-1' && $freeChatCount >= $freeChatLimit) {
+            return $this->sendError('You have reached the limit for free chats.');
+        }
+        
         $startTime = $request->start_time ?? Carbon::now()->format('H:i');
         $durationSeconds = $request->duration * 60;
         $endTime = Carbon::parse($startTime)->addMinutes($request->duration)->format('H:i');
@@ -1307,10 +1318,22 @@ class AppointmentController extends BaseController
 
     public function getFreeClaimChat()
     {
-        $orderCount = Order::where('customer_id', auth('api')->user()->id)->where('typeable_type','App\Models\Appointment')->count();
+        $freeChatStatus = \App\Models\Setting::where('name', 'free_chat_status')->value('data');
+        $freeChatLimit = \App\Models\Setting::where('name', 'free_chat_limit')->value('data') ?? 1;
+        $freeChatCount = \App\Models\Appointment::where('customer_id', auth('api')->user()->id)->where('payment_id', 'freeChat')->count();
+        
+        $isFreeChatClaimed = false;
+        if ($freeChatStatus == '1') {
+            if ($freeChatLimit == '-1' || $freeChatCount < $freeChatLimit) {
+                $isFreeChatClaimed = true;
+            }
+        }
+
         $data = [
-            'is_free_chat_claimed' => false,
-            // 'is_free_chat_claimed' => $orderCount === 0 ? true : false,
+            'is_free_chat_claimed'  => $isFreeChatClaimed,
+            'free_chat_enabled'     => $freeChatStatus == '1',
+            'free_chat_limit'       => $freeChatLimit == '-1' ? 'Unlimited' : (int) $freeChatLimit,
+            'free_chat_used'        => $freeChatCount,
         ];
         return $this->sendResponse($data, 'Free claim chat retrived successfully!');
     }
