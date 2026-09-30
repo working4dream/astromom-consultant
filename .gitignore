@@ -18,6 +18,8 @@ public_html/hot
 public_html/uploads
 
 storage/*.key
+storage/firebase/*
+!storage/firebase/.gitkeep
 storage/framework
 .env
 Homestead.yaml
@@ -27,3 +29,4 @@ Homestead.json
 
 composer.lock
 .idea
+.claude/
